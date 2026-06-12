@@ -27,9 +27,9 @@
       "periodo": "Dec 2024 – Dec 2025",
       "cargo": "Software developer",
       "bullets": [
-        "Building interfaces for a new service order visualization and closure application in the maritime logistics sector using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
+        "Building interfaces for a new service order visualization and closure application in the maritime logistics sector using React and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
         "Implementation and support for a legacy Angular application, including critical bug fixes, new feature additions, and process modernization",
-        "Addition of observability tools and build configuration optimization, resulting in a reduced final JS bundle"
+        "Addition of observability tools and build configuration optimization, resulting in a faster download and parse of the final JS bundle, decreasing application startup time by 4 seconds"
       ]
     },
     {
@@ -53,7 +53,7 @@
       "periodo": "2020 – Sep 2021",
       "cargo": "Software developer",
       "bullets": [
-        "Contribution to a team that developed a coupon app for a São Paulo shopping mall network, surpassing 100,000 downloads on the Play Store",
+        "Development of an coupon app for a São Paulo shopping mall network, surpassing 100,000 downloads on the Play Store",
         "Implementation of performant lists using FlatList, getItemLayout, maxToRenderPerBatch, and infinite pagination",
         "Assistance to less experienced developers through pair programming sessions, helping them become familiar with React Native and introducing code best practices"
       ]
