@@ -1,0 +1,101 @@
+{
+  "nome": "Lucas Almeida",
+  "cargo": "Software Developer",
+  "contato": {
+    "localizacao": "29 years • São Paulo",
+    "links": ["https://lelukas.com/", "https://linkedin.com/in/lucas-almeida-59a804166/", "https://github.com/lelukas"],
+    "telefone": "(88) 99740-8406",
+    "email": "lelukass@gmail.com"
+  },
+  "resumo": "Senior Software Developer with 8 years of experience. Specialized in refactoring, performance, and rendering engineering of web and mobile interfaces, combined with solid backend experience — including API architecture, cloud services, and databases. Experience in team leadership and mentoring developers.",
+  "categorias_skills": {
+    "Languages": ["TypeScript", "JavaScript", "HTML", "CSS (SASS, SCSS, PostCSS)"],
+    "Frontend": ["React", "Next.js","React Native", "Angular", "Ionic"],
+    "Backend": ["NestJS", "Prisma ORM", "REST APIs"],
+    "Databases": ["DynamoDB", "PostgreSQL (RDS)", "Redis (cache)"],
+    "Cloud & Infrastructure": ["AWS (Amplify, Cognito, S3, SNS, SES, Lambda, Elastic Beanstalk)", "Heroku", "Render"],
+    "Testing": ["Cypress", "Jest", "React Native Testing Library", "Detox", "E2E"],
+    "CI/CD & Build": ["CodeMagic", "ESBuild"],
+    "Observability": ["Grafana", "Sentry"],
+    "Notifications & Deep Linking": ["OneSignal"],
+    "Design & Animation": ["Adobe XD", "Photoshop", "Illustrator", "After Effects", "Lottie", "GSAP", "Three.js"]
+  },
+  "practices": "Frontend and backend architecture definition, Code refactoring, Performance optimization, Technical documentation and coding standards, Team leadership and management, Mentoring and pair programming, AI-assisted development and agentic engineering (Cursor, Claude Code)",
+  "experiencias": [
+    {
+      "empresa": "A.P Moller – Maersk",
+      "periodo": "Dec 2024 – Dec 2025",
+      "cargo": "Software developer",
+      "bullets": [
+        "Building interfaces for a new service order visualization and closure application in the maritime logistics sector using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
+        "Implementation and support for a legacy Angular application, including critical bug fixes, new feature additions, and process modernization",
+        "Addition of observability tools and build configuration optimization, resulting in a reduced final JS bundle"
+      ]
+    },
+    {
+      "empresa": "Tabella",
+      "periodo": "Sep 2021 – Nov 2024",
+      "cargo": "Software engineer and project manager",
+      "bullets": [
+        "Development of a social network application for a Catholic audience using React Native and TypeScript, reaching 50,000 downloads",
+        "Implementation of complex features: audio and video player, communities system, comments section, push notifications, rich text post creation form (built without external libraries), login, and sign-up flow",
+        "Creation of extensive documentation in the repository's README covering code practices, organization, and architecture, reducing task assimilation time between developers",
+        "Authorship of business rule documentation, streamlining communication across teams",
+        "Migration from a legacy Amplify + AppSync environment to NestJS + Prisma for improved scalability, involving complex APIs, queue integration, DynamoDB, and Lambda functions for critical services connected to AWS triggers",
+        "Use of AWS S3, SNS, Cognito, RDS, SES, and Elastic Beanstalk",
+        "Use of PaaS platforms for staging APIs such as Heroku and Render",
+        "Automated CI/CD pipeline for React Native using CodeMagic",
+        "After 18 months, management of a 5-developer team: creation and assignment of tasks on the board, facilitation of communication between the tech team and other departments, 1:1 meetings, and translation of business requirements into technical tasks"
+      ]
+    },
+    {
+      "empresa": "Paguru",
+      "periodo": "2020 – Sep 2021",
+      "cargo": "Software developer",
+      "bullets": [
+        "Contribution to a team that developed a coupon app for a São Paulo shopping mall network, surpassing 100,000 downloads on the Play Store",
+        "Implementation of performant lists using FlatList, getItemLayout, maxToRenderPerBatch, and infinite pagination",
+        "Assistance to less experienced developers through pair programming sessions, helping them become familiar with React Native and introducing code best practices"
+      ]
+    },
+    {
+      "empresa": "Americanas Delivery (formerly Shipp)",
+      "periodo": "2019 – 2020",
+      "cargo": "Software developer",
+      "bullets": [
+        "Work on an internal management tool using Angular",
+        "Creation of UI components based on prototypes, with addition of props to handle design variations and minimize the need for custom CSS",
+        "Refactoring of the application using the newly created components, drastically reducing code duplication",
+        "Refactoring of the side navigation bar: implementation as a container independent from the main content. During resizing, application of a blur effect to the rest of the interface, with updates only triggered after the action was completed—eliminating visual jank caused by animations based on margin and width",
+        "Documentation of implemented solutions for team reference"
+      ]
+    },
+    {
+      "empresa": "Stalebu",
+      "periodo": "2018 – 2019",
+      "cargo": "Software developer and UI/UX designer",
+      "bullets": [
+        "Prototyping and coding of interfaces for a personal vehicle management app",
+        "Complete codebase refactor within one week, assisted by a coworker, resulting in significantly improved maintainability and faster development of new features",
+        "Creation of documentation for file and folder organization, naming conventions, and an ESLint rule set—solving the team's main pain point: inconsistencies between different developers' practices. A more homogeneous codebase accelerated the development process",
+        "Creation of an animation for an existing logo using After Effects and Lottie, implemented on the product's institutional website"
+      ]
+    },
+    {
+      "empresa": "Paguru",
+      "periodo": "2017 – 2018",
+      "cargo": "Software developer and UI/UX designer",
+      "bullets": [
+        "Prototyping and coding of interfaces for a delivery application",
+        "Software development for external clients as part of a software services company"
+      ]
+    }
+  ],
+  "formacao": [
+    { "nome": "Information Systems", "instituicao": "UNINASSAU", "tipo": "Bachelor's", "anoInicio": 2016, "anoFim": 2019 }
+  ],
+  "idiomas": [
+    { "idioma": "Portuguese", "nivel": "Native" },
+    { "idioma": "English", "nivel": "Fluent" }
+  ]
+}
