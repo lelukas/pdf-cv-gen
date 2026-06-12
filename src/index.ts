@@ -127,19 +127,15 @@ async function main() {
     printBackground: true,
   })
 
-  await browser.close()
-  console.log(`PDF gerado: ${OUTPUT_PATH}`)
-
   if (extract) {
-    const textoPuro = html
-      .replace(/<[^>]*>/g, '')
-      .replace(/&[a-z]+;/g, ' ')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim()
+    const textoPuro = await page.evaluate(() => document.body.innerText)
     const txtPath = OUTPUT_PATH.replace(/\.pdf$/, '.txt')
     writeFileSync(txtPath, textoPuro, 'utf-8')
     console.log(`Texto extraído: ${txtPath}`)
   }
+
+  await browser.close()
+  console.log(`PDF gerado: ${OUTPUT_PATH}`)
 }
 
 main().catch((err) => {

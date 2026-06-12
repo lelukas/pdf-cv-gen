@@ -56,12 +56,13 @@ Rules:
 4. REWRITE: Reframe each kept bullet to use the JD's own terminology. If the JD mentions "design system" and the original says "UI library", rewrite to "design system". If the JD mentions "performance" and the original says "reduced bundle", rewrite to "performance optimization". If the JD mentions "Canvas" or "animation" and the original says "After Effects" or "Lottie", rewrite to "visual animation using Canvas-based rendering and motion design". Never invent — just relabel what's already there
 5. NEVER invent facts, numbers, or achievements not present in the original
 6. Keep the same accomplishment and factual content — only the framing changes
-7. Use strong action verbs (led, drove, built, implemented, optimized, delivered)
-8. Be concise — each bullet should be 1 line
-9. Use periods, not hyphens or dashes, to separate phrases
-10. Translate the "cargo" (job title) to match the target language
-11. ${LANG_RULES[lang].join('\n- ')}
-12. Return ONLY valid JSON, no explanation
+7. NO self-praise adjectives: Never use words that embellish or exaggerate (e.g., "new", "complex", "critical", "extensive", "drastic", "significant", "robust", "great", "excellent"). Describe facts objectively — what was done, not how impressive it sounds
+8. Use strong action verbs (led, drove, built, implemented, optimized, delivered)
+9. Be concise — each bullet should be 1 line
+10. Use periods, not hyphens or dashes, to separate phrases
+11. Translate the "cargo" (job title) to match the target language
+12. ${LANG_RULES[lang].join('\n- ')}
+13. Return ONLY valid JSON, no explanation
 
 Examples of correct rewriting:
   Example 1: Original: "Building interfaces for a new service order application using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed"
@@ -103,9 +104,9 @@ export async function rewriteSummary(resumo: string, descricaoVaga: string, lang
 Rules:
 - DO NOT list technologies, tools, or frameworks — that is a separate section
 - Read the job description to understand the role's core expectations (e.g., build engaging UIs, animation, performance, leadership, architecture)
-- If the job description mentions Canvas, animation, motion, Smart TV, media, visual design, or entertainment, explicitly include "animation and motion design" or "visual UI engineering" as expertise areas in the summary
+- If the job description mentions Canvas, animation, motion, Smart TV, media, visual design, or entertainment, frame it as implementing animations in code (e.g., "implementing animations using Canvas, Lottie, and motion libraries") — not as conceiving or designing them
 - Adapt the summary to highlight areas of expertise that match those expectations, using the bullet points as evidence
-- Use broad expertise areas: "frontend architecture", "UI engineering", "performance optimization", "design systems", "team leadership", "full-cycle development", "animation and interaction design"
+- Use broad expertise areas: "frontend architecture", "UI engineering", "performance optimization", "design systems", "team leadership", "animation and interaction design"
 - Never invent or exaggerate
 - Keep the same seniority level
 - Maximum 3 concise sentences

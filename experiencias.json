@@ -27,7 +27,7 @@
       "periodo": "Dec 2024 – Dec 2025",
       "cargo": "Software developer",
       "bullets": [
-        "Building interfaces for a new service order visualization and closure application in the maritime logistics sector using React and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
+        "Building interfaces for a service order visualization and closure application in the maritime logistics sector using React and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
         "Implementation and support for a legacy Angular application, including critical bug fixes, new feature additions, and process modernization",
         "Addition of observability tools and build configuration optimization, resulting in a faster download and parse of the final JS bundle, decreasing application startup time by 4 seconds"
       ]
