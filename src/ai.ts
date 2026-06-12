@@ -52,20 +52,24 @@ export async function rewriteBullets(experiencias: Experiencia[], descricaoVaga:
 Rules:
 1. EXTRACT: First, identify the key skills, tools, and responsibilities from the job description (e.g., React, Next.js, TypeScript, design systems, performance, SSR, animations, Figma, aesthetic sense)
 2. MAP & SELECT: From each experience, keep ONLY the 3-4 bullets that best demonstrate those extracted skills. Drop bullets with no clear connection to the JD
-3. REWRITE: Reframe each kept bullet to use the JD's own terminology. If the JD mentions "design system" and the original says "UI library", rewrite to "design system". If the JD mentions "performance" and the original says "reduced bundle", rewrite to "otimização de performance". Never invent — just relabel what's already there
-4. NEVER invent facts, numbers, or achievements not present in the original
-5. Keep the same accomplishment and factual content — only the framing changes
-6. Use strong action verbs (led, drove, built, implemented, optimized, delivered)
-7. Be concise — each bullet should be 1 line
-8. Use periods, not hyphens or dashes, to separate phrases
-9. Translate the "cargo" (job title) to match the target language
-10. ${LANG_RULES[lang].join('\n- ')}
-11. Return ONLY valid JSON, no explanation
+3. ANIMATION BOOST: If the job description mentions ANY of these terms — Canvas, animation, motion, Smart TV, media, entertainment, visual design, After Effects, Lottie, rendering — then PRIORITIZE bullets involving Lottie, After Effects, GSAP, Three.js, animation, visual prototyping, Adobe XD, Photoshop, Illustrator. These should be kept and placed FIRST, before other bullets
+4. REWRITE: Reframe each kept bullet to use the JD's own terminology. If the JD mentions "design system" and the original says "UI library", rewrite to "design system". If the JD mentions "performance" and the original says "reduced bundle", rewrite to "performance optimization". If the JD mentions "Canvas" or "animation" and the original says "After Effects" or "Lottie", rewrite to "visual animation using Canvas-based rendering and motion design". Never invent — just relabel what's already there
+5. NEVER invent facts, numbers, or achievements not present in the original
+6. Keep the same accomplishment and factual content — only the framing changes
+7. Use strong action verbs (led, drove, built, implemented, optimized, delivered)
+8. Be concise — each bullet should be 1 line
+9. Use periods, not hyphens or dashes, to separate phrases
+10. Translate the "cargo" (job title) to match the target language
+11. ${LANG_RULES[lang].join('\n- ')}
+12. Return ONLY valid JSON, no explanation
 
-Example of correct rewriting:
-  Original: "Building interfaces for a new service order application using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed"
-  If JD mentions "design system" and "performance":
-    Rewritten: "Construção de interfaces para aplicação do zero usando Next.js, contribuindo ativamente para o design system interno. Reconhecido por clientes pela performance e fluidez da experiência"`
+Examples of correct rewriting:
+  Example 1: Original: "Building interfaces for a new service order application using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed"
+    If JD mentions "design system" and "performance":
+      Rewritten (en): "Built a greenfield application using Next.js while actively contributing to the internal design system. Recognized by clients for performance and smooth UX"
+  Example 2: Original: "Creation of an animation for an existing logo using After Effects and Lottie, implemented on the product's institutional website"
+    If JD mentions "Canvas" or "animation" or "Smart TV":
+      Rewritten (en): "Created visual animations with After Effects and Lottie for the product interface, applying Canvas-based rendering and motion design principles compatible with Smart TV platforms"`
 
   const userPrompt = `Job Description:
 ${descricaoVaga}
@@ -99,6 +103,7 @@ export async function rewriteSummary(resumo: string, descricaoVaga: string, lang
 Rules:
 - DO NOT list technologies, tools, or frameworks — that is a separate section
 - Read the job description to understand the role's core expectations (e.g., build engaging UIs, animation, performance, leadership, architecture)
+- If the job description mentions Canvas, animation, motion, Smart TV, media, visual design, or entertainment, explicitly include "animation and motion design" or "visual UI engineering" as expertise areas in the summary
 - Adapt the summary to highlight areas of expertise that match those expectations, using the bullet points as evidence
 - Use broad expertise areas: "frontend architecture", "UI engineering", "performance optimization", "design systems", "team leadership", "full-cycle development", "animation and interaction design"
 - Never invent or exaggerate
