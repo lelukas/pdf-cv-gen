@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync } from 'fs'
 import puppeteer from 'puppeteer'
 import { CurriculoData } from './types.js'
 import { gerarHtml } from './template.js'
@@ -8,24 +8,27 @@ import { Lang } from './i18n.js'
 
 const EXPERIENCIAS_PATH = 'experiencias.json'
 
-function parseArgs(args: string[]): { vagaPath: string; lang: Lang } {
+function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boolean } {
   let lang: Lang = 'en'
+  let extract = false
   const filtered: string[] = []
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--lang' || args[i] === '-l') {
       lang = (args[++i] as Lang) || 'en'
+    } else if (args[i] === '--extract') {
+      extract = true
     } else {
       filtered.push(args[i])
     }
   }
 
-  return { vagaPath: filtered[0], lang }
+  return { vagaPath: filtered[0], lang, extract }
 }
 
 async function main() {
   const args = process.argv.slice(2)
-  const { vagaPath, lang } = parseArgs(args)
+  const { vagaPath, lang, extract } = parseArgs(args)
   const langSuffix = lang !== 'en' ? `-${lang}` : ''
   const OUTPUT_PATH = `cv${langSuffix}.pdf`
 
@@ -33,6 +36,7 @@ async function main() {
     console.error('Uso: npm run gerar -- caminho/para/vaga.txt')
     console.error('      npm run gerar -- "Senior Frontend Engineer Nubank"')
     console.error('      npm run gerar -- caminho/para/vaga.txt --lang pt')
+    console.error('      npm run gerar -- vaga.txt --extract      # gera cv.txt junto')
     process.exit(1)
   }
 
@@ -125,6 +129,17 @@ async function main() {
 
   await browser.close()
   console.log(`PDF gerado: ${OUTPUT_PATH}`)
+
+  if (extract) {
+    const textoPuro = html
+      .replace(/<[^>]*>/g, '')
+      .replace(/&[a-z]+;/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+    const txtPath = OUTPUT_PATH.replace(/\.pdf$/, '.txt')
+    writeFileSync(txtPath, textoPuro, 'utf-8')
+    console.log(`Texto extraído: ${txtPath}`)
+  }
 }
 
 main().catch((err) => {
