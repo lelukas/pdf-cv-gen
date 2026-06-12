@@ -54,16 +54,22 @@ async function main() {
   console.log(`Adaptando currículo para a vaga (${lang})...`)
   const dadosAdaptados = { ...dados }
 
-  console.log('Reescrevendo bullets e resumo com IA...')
+  console.log('Reescrevendo bullets com IA...')
   try {
-    const [experienciasReescritas, resumoReescrito] = await Promise.all([
-      rewriteBullets(dadosAdaptados.experiencias, descricaoVaga, lang),
-      dadosAdaptados.resumo ? rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang) : Promise.resolve(''),
-    ])
+    const experienciasReescritas = await rewriteBullets(dadosAdaptados.experiencias, descricaoVaga, lang)
     dadosAdaptados.experiencias = experienciasReescritas
-    if (resumoReescrito) dadosAdaptados.resumo = resumoReescrito
   } catch (err: any) {
-    console.warn('Aviso: reescrita com IA falhou, usando bullets originais:', err.message)
+    console.warn('Aviso: reescrita de bullets falhou, usando originais:', err.message)
+  }
+
+  if (dadosAdaptados.resumo) {
+    console.log('Reescrevendo resumo com IA...')
+    const bulletsContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.bullets.join('; ')}`).join('\n')
+    try {
+      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, bulletsContext)
+    } catch (err: any) {
+      console.warn('Aviso: reescrita do resumo falhou, mantendo original:', err.message)
+    }
   }
 
   if (lang === 'pt') {
@@ -96,6 +102,7 @@ async function main() {
         traduzido.idiomas.forEach((langItem, i) => {
           if (dadosAdaptados.idiomas?.[i]) {
             dadosAdaptados.idiomas[i].idioma = langItem.idioma
+            if (langItem.nivel) dadosAdaptados.idiomas[i].nivel = langItem.nivel
           }
         })
       }
