@@ -21,7 +21,7 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
       </div>
       <div class="exp-role">${exp.cargo}</div>
       <ul>
-        ${exp.realizacoes.map((b) => `<li>${BULLET} ${b}</li>`).join('\n        ')}
+        ${exp.topicos.map((b) => `<li>${BULLET} ${b}</li>`).join('\n        ')}
       </ul>
     </div>
   `,

@@ -2,7 +2,7 @@ export interface Experiencia {
   empresa: string
   periodo: string
   cargo: string
-  realizacoes: string[]
+  topicos: string[]
 }
 
 export interface Formacao {

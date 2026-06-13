@@ -27,7 +27,7 @@ const TEMPLATE_EXPERIENCIAS: CurriculoData = {
       empresa: 'SUA_EMPRESA',
       periodo: 'MES ANO – MES ANO',
       cargo: 'SEU_CARGO',
-      realizacoes: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
+      topicos: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
     },
   ],
   formacao: [{ nome: 'SEU_CURSO', instituicao: 'SUA_INSTITUICAO', tipo: 'SEU_TIPO', anoInicio: 2020, anoFim: 2024 }],
@@ -136,19 +136,19 @@ async function main() {
     console.log(`Entradas omitidas: ${antes - dadosAdaptados.experiencias.length}`)
   }
 
-  console.log('Reescrevendo realizacoes com IA...')
+  console.log('Reescrevendo topicos com IA...')
   try {
     const experienciasReescritas = await rewriteBullets(dadosAdaptados.experiencias, descricaoVaga, lang)
     dadosAdaptados.experiencias = experienciasReescritas
   } catch (err: any) {
-    console.warn('Aviso: reescrita de realizacoes falhou, usando originais:', err.message)
+    console.warn('Aviso: reescrita de topicos falhou, usando originais:', err.message)
   }
 
   if (dadosAdaptados.resumo) {
     console.log('Reescrevendo resumo com IA...')
-    const realizacoesContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.realizacoes.join('; ')}`).join('\n')
+    const topicosContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.topicos.join('; ')}`).join('\n')
     try {
-      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, realizacoesContext)
+      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, topicosContext)
     } catch (err: any) {
       console.warn('Aviso: reescrita do resumo falhou, mantendo original:', err.message)
     }
