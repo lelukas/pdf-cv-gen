@@ -8,9 +8,15 @@ import { Lang } from './i18n.js'
 
 const EXPERIENCIAS_PATH = 'experiencias.json'
 
-function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boolean } {
+function parseAno(periodo: string): { inicio: number; fim: number } {
+  const anos = [...periodo.matchAll(/\b(\d{4})\b/g)].map((m) => parseInt(m[1]))
+  return { inicio: anos[0], fim: anos[anos.length - 1] }
+}
+
+function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boolean; skipRange: [number, number] | null } {
   let lang: Lang = 'en'
   let extract = false
+  let skipRange: [number, number] | null = null
   const filtered: string[] = []
 
   for (let i = 0; i < args.length; i++) {
@@ -18,17 +24,25 @@ function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boo
       lang = (args[++i] as Lang) || 'en'
     } else if (args[i] === '--extract') {
       extract = true
+    } else if (args[i] === '--skip-range' && args[i + 1]) {
+      const match = args[++i].match(/^(\d{4})-(\d{4})$/)
+      if (match) {
+        skipRange = [parseInt(match[1]), parseInt(match[2])]
+      } else {
+        console.error('Formato inválido para --skip-range. Use YYYY-YYYY (ex: --skip-range 2017-2019)')
+        process.exit(1)
+      }
     } else {
       filtered.push(args[i])
     }
   }
 
-  return { vagaPath: filtered[0], lang, extract }
+  return { vagaPath: filtered[0], lang, extract, skipRange }
 }
 
 async function main() {
   const args = process.argv.slice(2)
-  const { vagaPath, lang, extract } = parseArgs(args)
+  const { vagaPath, lang, extract, skipRange } = parseArgs(args)
   const langSuffix = lang !== 'en' ? `-${lang}` : ''
   const OUTPUT_PATH = `cv${langSuffix}.pdf`
 
@@ -37,6 +51,7 @@ async function main() {
     console.error('      npm run gerar -- "Senior Frontend Engineer Nubank"')
     console.error('      npm run gerar -- caminho/para/vaga.txt --lang pt')
     console.error('      npm run gerar -- vaga.txt --extract      # gera cv.txt junto')
+    console.error('      npm run gerar -- vaga.txt --skip-range 2017-2019  # omite experiencias no range')
     process.exit(1)
   }
 
@@ -57,6 +72,18 @@ async function main() {
 
   console.log(`Adaptando currículo para a vaga (${lang})...`)
   const dadosAdaptados = { ...dados }
+
+  if (skipRange) {
+    const [skipInicio, skipFim] = skipRange
+    const antes = dadosAdaptados.experiencias.length
+    dadosAdaptados.experiencias = dadosAdaptados.experiencias.filter((e) => {
+      const { inicio, fim } = parseAno(e.periodo)
+      const dentro = inicio >= skipInicio && fim <= skipFim
+      if (dentro) console.log(`  Omitido: ${e.empresa} (${e.periodo})`)
+      return !dentro
+    })
+    console.log(`Entradas omitidas: ${antes - dadosAdaptados.experiencias.length}`)
+  }
 
   console.log('Reescrevendo bullets com IA...')
   try {
