@@ -2,7 +2,27 @@ import { readFileSync, existsSync } from 'fs'
 import { Experiencia } from './types.js'
 import { Lang } from './i18n.js'
 
-const DEEPSEEK_BASE = 'https://api.deepseek.com'
+function getConfig() {
+  const key = process.env.AI_API_KEY
+  const baseUrl = process.env.AI_BASE_URL
+  const model = process.env.AI_MODEL
+  const responsePath = process.env.AI_RESPONSE_PATH
+
+  if (!key) throw new Error('AI_API_KEY não definida. Crie um arquivo .env com a chave.')
+  if (!baseUrl) throw new Error('AI_BASE_URL não definida. Crie um arquivo .env com a URL.')
+  if (!model) throw new Error('AI_MODEL não definida. Crie um arquivo .env com o modelo.')
+  if (!responsePath) throw new Error('AI_RESPONSE_PATH não definida. Crie um arquivo .env com o caminho da resposta.')
+
+  return { key, baseUrl, model, responsePath: responsePath.split('.') }
+}
+
+function getNested(obj: any, path: string[]): any {
+  return path.reduce((acc, key) => {
+    if (acc == null) return undefined
+    const idx = parseInt(key)
+    return Number.isNaN(idx) ? acc[key] : acc[idx]
+  }, obj)
+}
 
 interface PromptSection {
   preamble: string
@@ -49,20 +69,20 @@ interface Message {
   content: string
 }
 
-async function callDeepSeek(messages: Message[]): Promise<string> {
-  const key = process.env.DEEPSEEK_API_KEY
+async function callAI(messages: Message[]): Promise<string> {
+  const { baseUrl, key, model, responsePath } = getConfig()
   if (!key) {
-    throw new Error('DEEPSEEK_API_KEY não definida. Crie um arquivo .env com a chave.')
+    throw new Error('AI_API_KEY não definida. Crie um arquivo .env com a chave.')
   }
 
-  const res = await fetch(`${DEEPSEEK_BASE}/v1/chat/completions`, {
+  const res = await fetch(`${baseUrl}/v1/chat/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,
     },
     body: JSON.stringify({
-      model: 'deepseek-chat',
+      model,
       messages,
       temperature: 0.3,
       max_tokens: 4000,
@@ -71,11 +91,13 @@ async function callDeepSeek(messages: Message[]): Promise<string> {
 
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(`DeepSeek API error (${res.status}): ${text}`)
+    throw new Error(`AI API error (${res.status}): ${text}`)
   }
 
   const data = (await res.json()) as any
-  return data.choices[0].message.content
+  const result = getNested(data, responsePath)
+  if (result == null) throw new Error(`Resposta da API não esperada. Caminho "${process.env.AI_RESPONSE_PATH}" não encontrado.`)
+  return result
 }
 
 const LANG_RULES: Record<Lang, string[]> = {
@@ -109,7 +131,7 @@ Return a JSON array where each object has the same "empresa", "periodo" fields, 
   }
 ]`
 
-  const result = await callDeepSeek([
+  const result = await callAI([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
   ])
@@ -137,7 +159,7 @@ ${topicosContext || ''}
 
 Rewritten summary:`
   return (
-    await callDeepSeek([
+    await callAI([
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ])
@@ -164,7 +186,7 @@ ${JSON.stringify(dados, null, 2)}
 
 Return the same structure with fields translated.`
 
-  const result = await callDeepSeek([
+  const result = await callAI([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
   ])
