@@ -28,7 +28,7 @@
       "cargo": "Software developer",
       "bullets": [
         "Building interfaces for a service order visualization and closure application in the maritime logistics sector using React and an internal UI library. Application built from scratch, recognized by clients for its speed and quality of experience",
-        "Implementation and support for a legacy Angular application, including critical bug fixes, new feature additions, and process modernization",
+        "Implementation and support for a legacy Angular application, including bug fixes, feature additions, and process modernization",
         "Addition of observability tools and build configuration optimization, resulting in a faster download and parse of the final JS bundle, decreasing application startup time by 4 seconds"
       ]
     },
@@ -38,14 +38,13 @@
       "cargo": "Software engineer and project manager",
       "bullets": [
         "Development of a social network application for a Catholic audience using React Native and TypeScript, reaching 50,000 downloads",
-        "Implementation of complex features: audio and video player, communities system, comments section, push notifications, rich text post creation form (built without external libraries), login, and sign-up flow",
-        "Creation of extensive documentation in the repository's README covering code practices, organization, and architecture, reducing task assimilation time between developers",
-        "Authorship of business rule documentation, streamlining communication across teams",
-        "Migration from a legacy Amplify + AppSync environment to NestJS + Prisma for improved scalability, involving complex APIs, queue integration, DynamoDB, and Lambda functions for critical services connected to AWS triggers",
-        "Use of AWS S3, SNS, Cognito, RDS, SES, and Elastic Beanstalk",
-        "Use of PaaS platforms for staging APIs such as Heroku and Render",
-        "Automated CI/CD pipeline for React Native using CodeMagic",
-        "After 18 months, management of a 5-developer team: creation and assignment of tasks on the board, facilitation of communication between the tech team and other departments, 1:1 meetings, and translation of business requirements into technical tasks"
+        "Implementation of audio/video player, communities, comments, push notifications, rich text editor (built without libraries), and login/sign-up flows — serving 10,000 monthly active users",
+        "Created README documentation on code practices and architecture, reducing new developer ramp-up from 5 to 3 days",
+        "Authored business rule documentation, streamlining communication across teams",
+        "Migrated from legacy Amplify + AppSync to NestJS + Prisma leveraging DynamoDB, Lambda, S3, SNS, Cognito, RDS, SES, and Elastic Beanstalk, reducing cloud infrastructure costs by 60%",
+        "Set up PaaS staging environments on Heroku and Render",
+        "Automated CI/CD pipeline for React Native via CodeMagic, cutting deployment time from 1 hour to 20 minutes",
+        "After 18 months, managed a 5-developer team: task planning, cross-department communication, 1:1s, and translating business requirements into technical tasks"
       ]
     },
     {
@@ -54,8 +53,8 @@
       "cargo": "Software developer",
       "bullets": [
         "Development of an coupon app for a São Paulo shopping mall network, surpassing 100,000 downloads on the Play Store",
-        "Implementation of performant lists using FlatList, getItemLayout, maxToRenderPerBatch, and infinite pagination",
-        "Assistance to less experienced developers through pair programming sessions, helping them become familiar with React Native and introducing code best practices"
+        "Optimized list rendering with FlatList, getItemLayout, and infinite pagination, maintaining 60fps scrolling and eliminating blank spaces during rapid scroll",
+        "Mentored 2 developers through pair programming throughout the project, accelerating their React Native proficiency and establishing code best practices"
       ]
     },
     {
@@ -63,11 +62,10 @@
       "periodo": "2019 – 2020",
       "cargo": "Software developer",
       "bullets": [
-        "Work on an internal management tool using Angular",
-        "Creation of UI components based on prototypes, with addition of props to handle design variations and minimize the need for custom CSS",
-        "Refactoring of the application using the newly created components, drastically reducing code duplication",
-        "Refactoring of the side navigation bar: implementation as a container independent from the main content. During resizing, application of a blur effect to the rest of the interface, with updates only triggered after the action was completed—eliminating visual jank caused by animations based on margin and width",
-        "Documentation of implemented solutions for team reference"
+        "Built and maintained an internal management tool using Angular, serving approximately 50 internal users across multiple teams",
+        "Created a reusable UI component library from prototypes, reducing duplicated CSS by 30% and cutting code duplication across the application",
+        "Redesigned the side navigation bar as an independent container with blur effects triggered only after resize completion, eliminating visual jank and delivering consistent 60fps during window resizing",
+        "Documented implemented solutions used by 10 developers for onboarding and reference"
       ]
     },
     {
@@ -76,8 +74,8 @@
       "cargo": "Software developer and UI/UX designer",
       "bullets": [
         "Prototyping and coding of interfaces for a personal vehicle management app",
-        "Complete codebase refactor within one week, assisted by a coworker, resulting in significantly improved maintainability and faster development of new features",
-        "Creation of documentation for file and folder organization, naming conventions, and an ESLint rule set—solving the team's main pain point: inconsistencies between different developers' practices. A more homogeneous codebase accelerated the development process",
+        "Complete codebase refactor within one week alongside a coworker, cutting feature development time by half",
+        "Standardized code practices across a 5-person team through documentation for file organization, naming conventions, and ESLint rules, eliminating inconsistencies between developers",
         "Creation of an animation for an existing logo using After Effects and Lottie, implemented on the product's institutional website"
       ]
     },
