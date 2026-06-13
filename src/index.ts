@@ -6,7 +6,7 @@ import { gerarHtml } from './template.js'
 import { rewriteBullets, rewriteSummary, translateRest } from './ai.js'
 import { Lang } from './i18n.js'
 
-const EXPERIENCIAS_PATH = 'experiencias.json'
+const EXPERIENCIAS_PATH = 'data.json'
 
 const TEMPLATE_EXPERIENCIAS: CurriculoData = {
   nome: 'SEU_NOME',
@@ -90,7 +90,7 @@ async function main() {
 
   if (!vagaPath) {
     console.error('Uso:')
-    console.error('  npm run init            # Cria experiencias.json template')
+    console.error('  npm run init            # Cria data.json template')
     console.error('  npm run generate -- caminho/para/vaga.txt')
     console.error('')
     console.error('Flags opcionais:')

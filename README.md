@@ -12,11 +12,11 @@ npm install
 
 ## Quick Start
 
-Create your `experiencias.json` with the template:
+Create your `data.json` with the template:
 
 ```bash
 npm run init
-# Edit experiencias.json with your data
+# Edit data.json with your data
 ```
 
 Generate a CV from a job description file:
@@ -29,7 +29,7 @@ npm run generate -- vaga.txt
 
 | Command | Description |
 |---------|-------------|
-| `npm run init` | Create `experiencias.json` template |
+| `npm run init` | Create `data.json` template |
 | `npm run generate -- arquivo_vaga.txt` | Generate CV adapted to the job |
 
 ## Flags
@@ -55,4 +55,4 @@ npm run generate -- vaga.txt --skip-range 2017-2019
 
 ## Data Source
 
-Your resume data lives in `experiencias.json` (gitignored). Edit it directly to add metrics, adjust bullets, or restructure experience entries.
+Your resume data lives in `data.json` (gitignored). Edit it directly to add metrics, adjust bullets, or restructure experience entries.

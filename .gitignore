@@ -3,6 +3,6 @@ dist
 *.pdf
 .env
 *vaga*
-experiencias.json
+data.json
 cv-pt.txt
 videos.txt
