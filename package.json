@@ -4,9 +4,8 @@
   "description": "Gerador de currículos adaptados para vagas específicas",
   "type": "module",
   "scripts": {
-    "gerar": "tsx src/index.ts",
-    "gerar:pt": "tsx src/index.ts --lang pt",
-    "exemplo": "tsx src/index.ts exemplo-vaga.txt",
+    "generate": "tsx src/index.ts",
+    "init": "tsx src/index.ts init",
     "lint": "eslint src/",
     "format": "eslint src/ --fix",
     "typecheck": "tsc --noEmit"

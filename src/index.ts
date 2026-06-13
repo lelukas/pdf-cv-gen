@@ -8,6 +8,42 @@ import { Lang } from './i18n.js'
 
 const EXPERIENCIAS_PATH = 'experiencias.json'
 
+const TEMPLATE_EXPERIENCIAS: CurriculoData = {
+  nome: 'SEU_NOME',
+  cargo: 'SEU_CARGO',
+  contato: {
+    localizacao: 'SUA_LOCALIZACAO',
+    links: ['https://seusite.com', 'https://linkedin.com/in/seuperfil'],
+    telefone: 'SEU_TELEFONE',
+    email: 'seu@email.com',
+  },
+  resumo: 'SEU_RESUMO',
+  categorias_skills: {
+    Frontend: ['React', 'TypeScript'],
+  },
+  practices: 'SUAS_PRATICAS',
+  experiencias: [
+    {
+      empresa: 'SUA_EMPRESA',
+      periodo: 'MES ANO – MES ANO',
+      cargo: 'SEU_CARGO',
+      bullets: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
+    },
+  ],
+  formacao: [{ nome: 'SEU_CURSO', instituicao: 'SUA_INSTITUICAO', tipo: 'SEU_TIPO', anoInicio: 2020, anoFim: 2024 }],
+  idiomas: [{ idioma: 'SEU_IDIOMA', nivel: 'SEU_NIVEL' }],
+}
+
+function initCommand() {
+  if (existsSync(EXPERIENCIAS_PATH)) {
+    console.error(`Arquivo ${EXPERIENCIAS_PATH} já existe. Remova-o primeiro ou edite manualmente.`)
+    process.exit(1)
+  }
+  writeFileSync(EXPERIENCIAS_PATH, JSON.stringify(TEMPLATE_EXPERIENCIAS, null, 2) + '\n')
+  console.log(`Template criado: ${EXPERIENCIAS_PATH}`)
+  console.log('Edite o arquivo com seus dados e execute: npm run generate -- caminho/para/vaga.txt')
+}
+
 function parseAno(periodo: string): { inicio: number; fim: number } {
   const anos = [...periodo.matchAll(/\b(\d{4})\b/g)].map((m) => parseInt(m[1]))
   return { inicio: anos[0], fim: anos[anos.length - 1] }
@@ -42,16 +78,30 @@ function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boo
 
 async function main() {
   const args = process.argv.slice(2)
+
+  if (args[0] === 'init') {
+    initCommand()
+    return
+  }
+
   const { vagaPath, lang, extract, skipRange } = parseArgs(args)
   const langSuffix = lang !== 'en' ? `-${lang}` : ''
   const OUTPUT_PATH = `cv${langSuffix}.pdf`
 
   if (!vagaPath) {
-    console.error('Uso: npm run gerar -- caminho/para/vaga.txt')
-    console.error('      npm run gerar -- "Senior Frontend Engineer Nubank"')
-    console.error('      npm run gerar -- caminho/para/vaga.txt --lang pt')
-    console.error('      npm run gerar -- vaga.txt --extract      # gera cv.txt junto')
-    console.error('      npm run gerar -- vaga.txt --skip-range 2017-2019  # omite experiencias no range')
+    console.error('Uso:')
+    console.error('  npm run init            # Cria experiencias.json template')
+    console.error('  npm run generate -- caminho/para/vaga.txt')
+    console.error('')
+    console.error('Flags opcionais:')
+    console.error('  --lang pt, -l pt        # Gera currículo em português')
+    console.error('  --extract               # Extrai texto do PDF como .txt')
+    console.error('  --skip-range YYYY-YYYY  # Omite experiências no range de anos')
+    console.error('')
+    console.error('Exemplos:')
+    console.error('  npm run generate -- vaga.txt --lang pt')
+    console.error('  npm run generate -- vaga.txt --extract')
+    console.error('  npm run generate -- vaga.txt --skip-range 2017-2019')
     process.exit(1)
   }
 
@@ -67,7 +117,8 @@ async function main() {
   if (existsSync(vagaPath)) {
     descricaoVaga = readFileSync(vagaPath, 'utf-8')
   } else {
-    descricaoVaga = [vagaPath, ...args.slice(1)].join(' ')
+    console.error(`Arquivo não encontrado: ${vagaPath}`)
+    process.exit(1)
   }
 
   console.log(`Adaptando currículo para a vaga (${lang})...`)
