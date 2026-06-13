@@ -79,14 +79,14 @@ My current experience entries (company, role, period, and original bullets):
 
 ${JSON.stringify(experiencias, null, 2)}
 
-Return a JSON array where each object has the same "empresa", "periodo" fields, but "cargo" and "bullets" are rewritten for this job. Format:
+Return a JSON array where each object has the same "empresa", "periodo" fields, but "cargo" and "realizacoes" are rewritten for this job. Format:
 
 [
   {
     "empresa": "...",
     "periodo": "...",
     "cargo": "...",
-    "bullets": ["rewritten bullet 1", "rewritten bullet 2"]
+    "realizacoes": ["rewritten bullet 1", "rewritten bullet 2"]
   }
 ]`
 
@@ -98,7 +98,7 @@ Return a JSON array where each object has the same "empresa", "periodo" fields, 
   const cleaned = result.replace(/```(?:json)?\n?/g, '').trim()
   return JSON.parse(cleaned)
 }
-export async function rewriteSummary(resumo: string, descricaoVaga: string, lang: Lang = 'en', bulletsContext?: string): Promise<string> {
+export async function rewriteSummary(resumo: string, descricaoVaga: string, lang: Lang = 'en', realizacoesContext?: string): Promise<string> {
   const systemPrompt = `You are a senior resume writer. Rewrite the candidate's professional summary to align with a job description.
 
 Rules:
@@ -122,7 +122,7 @@ Current summary:
 ${resumo}
 
 Candidate's rewritten bullet points for this job:
-${bulletsContext || ''}
+${realizacoesContext || ''}
 
 Rewritten summary:`
   return (
@@ -134,7 +134,7 @@ Rewritten summary:`
 }
 
 interface DadosTraduzir {
-  practices?: string
+  praticas?: string
   formacao: { nome: string; tipo?: string; instituicao: string }[]
   idiomas: { idioma: string; nivel?: string }[]
 }
@@ -146,7 +146,7 @@ export async function translateRest(dados: DadosTraduzir, lang: Lang): Promise<D
 
 Rules:
 - Keep proper nouns (company names, institution names) unchanged
-- Translate: practices/specialties text, course names (e.g. Information Systems → Sistemas de Informação), degree types (e.g. Bachelor's → Bacharelado), language names (e.g. Portuguese → Português, English → Inglês), and proficiency levels (e.g. Native → Nativo, Fluent → Fluente)
+- Translate: course names (e.g. Information Systems → Sistemas de Informação), degree types (e.g. Bachelor's → Bacharelado), language names (e.g. Portuguese → Português, English → Inglês), and proficiency levels (e.g. Native → Nativo, Fluent → Fluente)
 - Return ONLY valid JSON, no explanation`
 
   const userPrompt = `Translate this data to Brazilian Portuguese:

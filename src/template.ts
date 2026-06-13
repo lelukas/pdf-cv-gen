@@ -21,7 +21,7 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
       </div>
       <div class="exp-role">${exp.cargo}</div>
       <ul>
-        ${exp.bullets.map((b) => `<li>${BULLET} ${b}</li>`).join('\n        ')}
+        ${exp.realizacoes.map((b) => `<li>${BULLET} ${b}</li>`).join('\n        ')}
       </ul>
     </div>
   `,
@@ -53,10 +53,10 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
       </div>
     </div>`
       : ''
-  const sectionPractices = dados.practices
+  const sectionPractices = dados.praticas
     ? `<div class="section">
       <div class="title-section">${t('Practices & Specialties', lang)}</div>
-      <p>${dados.practices}</p>
+      <p>${dados.praticas}</p>
     </div>`
     : ''
   const sectionEducation = formacaoHtml

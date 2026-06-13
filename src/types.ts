@@ -2,7 +2,7 @@ export interface Experiencia {
   empresa: string
   periodo: string
   cargo: string
-  bullets: string[]
+  realizacoes: string[]
 }
 
 export interface Formacao {
@@ -31,7 +31,7 @@ export interface CurriculoData {
   contato?: Contato
   resumo?: string
   categorias_skills?: Record<string, string[]>
-  practices?: string
+  praticas?: string
   habilidades?: string[]
   experiencias: Experiencia[]
   formacao?: Formacao[]

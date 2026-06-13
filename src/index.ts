@@ -21,13 +21,13 @@ const TEMPLATE_EXPERIENCIAS: CurriculoData = {
   categorias_skills: {
     Frontend: ['React', 'TypeScript'],
   },
-  practices: 'SUAS_PRATICAS',
+  praticas: 'SUAS_PRATICAS',
   experiencias: [
     {
       empresa: 'SUA_EMPRESA',
       periodo: 'MES ANO – MES ANO',
       cargo: 'SEU_CARGO',
-      bullets: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
+      realizacoes: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
     },
   ],
   formacao: [{ nome: 'SEU_CURSO', instituicao: 'SUA_INSTITUICAO', tipo: 'SEU_TIPO', anoInicio: 2020, anoFim: 2024 }],
@@ -136,19 +136,19 @@ async function main() {
     console.log(`Entradas omitidas: ${antes - dadosAdaptados.experiencias.length}`)
   }
 
-  console.log('Reescrevendo bullets com IA...')
+  console.log('Reescrevendo realizacoes com IA...')
   try {
     const experienciasReescritas = await rewriteBullets(dadosAdaptados.experiencias, descricaoVaga, lang)
     dadosAdaptados.experiencias = experienciasReescritas
   } catch (err: any) {
-    console.warn('Aviso: reescrita de bullets falhou, usando originais:', err.message)
+    console.warn('Aviso: reescrita de realizacoes falhou, usando originais:', err.message)
   }
 
   if (dadosAdaptados.resumo) {
     console.log('Reescrevendo resumo com IA...')
-    const bulletsContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.bullets.join('; ')}`).join('\n')
+    const realizacoesContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.realizacoes.join('; ')}`).join('\n')
     try {
-      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, bulletsContext)
+      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, realizacoesContext)
     } catch (err: any) {
       console.warn('Aviso: reescrita do resumo falhou, mantendo original:', err.message)
     }
@@ -158,7 +158,7 @@ async function main() {
     try {
       const traduzido = await translateRest(
         {
-          practices: dadosAdaptados.practices,
+          praticas: dadosAdaptados.praticas,
           formacao: (dadosAdaptados.formacao || []).map((f) => ({
             nome: f.nome,
             tipo: f.tipo,
@@ -171,7 +171,7 @@ async function main() {
         },
         lang,
       )
-      dadosAdaptados.practices = traduzido.practices
+      dadosAdaptados.praticas = traduzido.praticas
       if (traduzido.formacao) {
         traduzido.formacao.forEach((f, i) => {
           if (dadosAdaptados.formacao?.[i]) {
