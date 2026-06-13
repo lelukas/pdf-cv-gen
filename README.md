@@ -19,13 +19,7 @@ npm run init
 # Edit experiencias.json with your data
 ```
 
-Generate a CV for a specific job:
-
-```bash
-npm run generate -- "Senior Frontend Engineer Nubank"
-```
-
-Or from a file with the full job description:
+Generate a CV from a job description file:
 
 ```bash
 npm run generate -- vaga.txt
@@ -36,10 +30,7 @@ npm run generate -- vaga.txt
 | Command | Description |
 |---------|-------------|
 | `npm run init` | Create `experiencias.json` template |
-| `npm run generate -- "vaga"` | Generate CV adapted to a job |
-| `npm run lint` | Lint source code |
-| `npm run format` | Auto-fix lint issues |
-| `npm run typecheck` | Run TypeScript type checking |
+| `npm run generate -- arquivo_vaga.txt` | Generate CV adapted to the job |
 
 ## Flags
 
