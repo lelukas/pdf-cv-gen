@@ -56,3 +56,35 @@ npm run generate -- vaga.txt --skip-range 2017-2019
 ## Data Source
 
 Your resume data lives in `data.json` (gitignored). Edit it directly to add metrics, adjust bullets, or restructure experience entries.
+
+## Custom Prompts
+
+AI behavior is controlled by two files:
+
+| File | Purpose |
+|------|---------|
+| `prompts.template.json` | Default AI rules |
+| `prompts.custom.json` | Your custom overrides |
+
+Created automatically by `npm run init`. Custom rules are deep-merged into the template by key — you only need to define what you want to override.
+
+Example — `prompts.custom.json`:
+```json
+{
+  "rewriteBullets": {
+    "system": {
+      "rules": {
+        "animation_boost": "ANIMATION BOOST: Prioritize Lottie and After Effects bullets if the JD mentions animation"
+      }
+    }
+  }
+}
+```
+
+Valid keys per section:
+
+- **`rewriteBullets.system`**: `rules` (merged by key), `examples` (replaces), `preamble` (replaces)
+- **`rewriteSummary.system`**: `rules` (merged by key)
+- **`translateRest.system`**: `rules` (merged by key)
+
+You can freely add or replace rules without touching any code.
