@@ -41,7 +41,19 @@ function initCommand() {
   }
   writeFileSync(EXPERIENCIAS_PATH, JSON.stringify(TEMPLATE_EXPERIENCIAS, null, 2) + '\n')
   console.log(`Template criado: ${EXPERIENCIAS_PATH}`)
-  console.log('Edite o arquivo com seus dados e execute: npm run generate -- caminho/para/vaga.txt')
+
+  const PROMPTS_CUSTOM_PATH = 'prompts.custom.json'
+  if (!existsSync(PROMPTS_CUSTOM_PATH)) {
+    const custom = {
+      rewriteBullets: { system: { rules: {} } },
+      rewriteSummary: { system: { rules: {} } },
+      translateRest: { system: { rules: {} } },
+    }
+    writeFileSync(PROMPTS_CUSTOM_PATH, JSON.stringify(custom, null, 2) + '\n')
+    console.log(`Custom prompts criado: ${PROMPTS_CUSTOM_PATH}`)
+  }
+
+  console.log('Edite os arquivos com seus dados e execute: npm run generate -- caminho/para/vaga.txt')
 }
 
 function parseAno(periodo: string): { inicio: number; fim: number } {
