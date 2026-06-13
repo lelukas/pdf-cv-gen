@@ -68,9 +68,9 @@ Examples of correct rewriting:
   Example 1: Original: "Building interfaces for a new service order application using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed"
     If JD mentions "design system" and "performance":
       Rewritten (en): "Built a greenfield application using Next.js while actively contributing to the internal design system. Recognized by clients for performance and smooth UX"
-  Example 2: Original: "Creation of an animation for an existing logo using After Effects and Lottie, implemented on the product's institutional website"
-    If JD mentions "Canvas" or "animation" or "Smart TV":
-      Rewritten (en): "Created visual animations with After Effects and Lottie for the product interface, applying Canvas-based rendering and motion design principles compatible with Smart TV platforms"`
+   Example 2: Original: "Creation of an animation for an existing logo using After Effects and Lottie, implemented on the product's institutional website"
+     If JD mentions "animation" or "motion":
+       Rewritten (en): "Created visual animations using After Effects and Lottie, applying motion design principles and Canvas-based rendering"`
 
   const userPrompt = `Job Description:
 ${descricaoVaga}
@@ -104,7 +104,8 @@ export async function rewriteSummary(resumo: string, descricaoVaga: string, lang
 Rules:
 - DO NOT list technologies, tools, or frameworks — that is a separate section
 - Read the job description to understand the role's core expectations (e.g., build engaging UIs, animation, performance, leadership, architecture)
-- If the job description mentions Canvas, animation, motion, Smart TV, media, visual design, or entertainment, frame it as implementing animations in code (e.g., "implementing animations using Canvas, Lottie, and motion libraries") — not as conceiving or designing them
+- Never claim experience with a specific platform, domain, or industry (e.g., Smart TV, streaming, healthcare, fintech) unless the candidate's original bullets explicitly mention it
+- If the job description mentions Canvas, animation, motion, media, visual design, or entertainment, you may use terminology like "implementing animations using Canvas, Lottie, and motion libraries" to describe existing Lottie/animation experience — but do not claim the candidate has worked on specific platforms or industries
 - Adapt the summary to highlight areas of expertise that match those expectations, using the bullet points as evidence
 - Use broad expertise areas: "frontend architecture", "UI engineering", "performance optimization", "design systems", "team leadership", "animation and interaction design"
 - Never invent or exaggerate
