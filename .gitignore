@@ -4,5 +4,5 @@ dist
 .env
 *vaga*
 data.json
-cv-pt.txt
-videos.txt
+cv-*.txt
+prompts.custom.json
