@@ -28,7 +28,7 @@
       "cargo": "Software developer",
       "bullets": [
         "Built a service order management application from scratch in the maritime logistics sector using React and an internal UI library, recognized by clients for its speed and quality of experience",
-        "Modernized a legacy Angular application through bug fixes, feature additions, and process improvements",
+        "Modernized a legacy Angular application through bug fixes and feature additions",
         "Optimized build configuration and added observability tools, reducing JS bundle download and parse time, cutting application startup by 4 seconds"
       ]
     },
