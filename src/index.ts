@@ -46,10 +46,16 @@ function initCommand() {
     const custom = {
       rewriteBullets: { system: { rules: {} } },
       rewriteSummary: { system: { rules: {} } },
-      translateRest: { system: { rules: {} } },
     }
     writeFileSync(PROMPTS_CUSTOM_PATH, JSON.stringify(custom, null, 2) + '\n')
     console.log(`Custom prompts created: ${PROMPTS_CUSTOM_PATH}`)
+  }
+
+  const TRANSLATION_CUSTOM_PATH = 'translation.custom.json'
+  if (!existsSync(TRANSLATION_CUSTOM_PATH)) {
+    const custom = { langRules: {} }
+    writeFileSync(TRANSLATION_CUSTOM_PATH, JSON.stringify(custom, null, 2) + '\n')
+    console.log(`Custom translation prompts created: ${TRANSLATION_CUSTOM_PATH}`)
   }
 
   console.log('Edit the files with your data and run: npm run generate -- path/to/job.txt')

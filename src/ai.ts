@@ -15,7 +15,11 @@ interface PromptSection {
 interface PromptsFile {
   rewriteBullets: { system: PromptSection }
   rewriteSummary: { system: Pick<PromptSection, 'preamble' | 'rules'> }
-  translateRest: { system: Pick<PromptSection, 'preamble' | 'rules'> }
+}
+
+interface TranslationPrompt {
+  preamble: string
+  rules: Record<string, string>
 }
 
 interface DadosTraduzir {
@@ -112,22 +116,22 @@ async function callAI(messages: Message[]): Promise<string> {
   return result
 }
 
-const LANG_RULES: Record<string, string[]> = {
-  en: ['Write all output in English'],
-  pt: [
-    'Write all output in Brazilian Portuguese',
-    'Use an impersonal tone. Do not refer to self. Use words like "atuação", "construção", "implementação", "adição", "migração". Examples: Built -> Construção, Developed -> Desenvolvimento de',
-    'Use masculine gender consistently when referring to the developer (e.g., "responsável", "alocado", "designado", "contratado")',
-  ],
-  es: [
-    'Write all output in Spanish',
-    'Use an impersonal tone. Do not refer to self.',
-    'Use masculine gender consistently when referring to the developer',
-  ],
+function loadLangRules(): Record<string, string[]> {
+  const base = JSON.parse(readFileSync('translation.template.json', 'utf-8'))
+  const rules: Record<string, string[]> = { ...base.langRules }
+  if (existsSync('translation.custom.json')) {
+    const extra = JSON.parse(readFileSync('translation.custom.json', 'utf-8'))
+    if (extra.langRules) {
+      Object.assign(rules, extra.langRules)
+    }
+  }
+  return rules
 }
 
 function langRules(lang: string): string[] {
-  return LANG_RULES[lang] || [`Write all output in ${languageName(lang)}`]
+  const base = [`Write all output in ${languageName(lang)}`]
+  const custom = loadLangRules()[lang]
+  return custom ? base.concat(custom) : base
 }
 
 function languageName(code: string): string {
@@ -195,6 +199,16 @@ Rewritten summary:`
   ).trim()
 }
 
+function loadTranslationPrompts(): TranslationPrompt {
+  const base = JSON.parse(readFileSync('translation.template.json', 'utf-8'))
+  if (existsSync('translation.custom.json')) {
+    const extra = JSON.parse(readFileSync('translation.custom.json', 'utf-8'))
+    const merged = deepMerge(base, extra)
+    return merged.system
+  }
+  return base.system
+}
+
 export async function translateRest(dados: DadosTraduzir, lang: string): Promise<DadosTraduzir> {
   const targetLang = languageName(lang)
 
@@ -211,14 +225,14 @@ export async function translateRest(dados: DadosTraduzir, lang: string): Promise
     }
   }
 
-  const prompts = loadPrompts()
-  const preamble = `You are a translator. Translate the following resume fields from English to ${targetLang}.`
-  const rules = Object.values(prompts.translateRest.system.rules)
+  const translation = loadTranslationPrompts()
+  const preamble = translation.preamble.replace('{targetLang}', targetLang)
+  const rules = Object.values(translation.rules)
     .map((r) => `- ${r}`)
     .join('\n')
   const systemPrompt = `${preamble}\n\n${rules}`
 
-  const userPrompt = `Translate this data to Brazilian Portuguese:
+  const userPrompt = `Translate this data to ${targetLang}:
 
 ${JSON.stringify(dados, null, 2)}
 

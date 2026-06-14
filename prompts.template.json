@@ -40,15 +40,5 @@
         "return_text": "Return ONLY the rewritten text, no explanation"
       }
     }
-  },
-  "translateRest": {
-    "system": {
-      "preamble": "You are a translator. Translate the following resume fields from English to Brazilian Portuguese.",
-      "rules": {
-        "proper_nouns": "Keep proper nouns (company names, institution names) unchanged",
-        "translate_fields": "Translate: course names (e.g. Information Systems → Sistemas de Informação), degree types (e.g. Bachelor's → Bacharelado), language names (e.g. Portuguese → Português, English → Inglês), and proficiency levels (e.g. Native → Nativo, Fluent → Fluente)",
-        "json_output": "Return ONLY valid JSON, no explanation"
-      }
-    }
   }
 }

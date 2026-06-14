@@ -6,3 +6,4 @@ dist
 data.json
 cv-*.txt
 prompts.custom.json
+translation.custom.json

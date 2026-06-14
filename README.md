@@ -31,8 +31,6 @@ For any other OpenAI-compatible provider, just change the values. The `AI_RESPON
 
 ## Quick Start
 
-## Quick Start
-
 Create your `data.json` with the template:
 
 ```bash
@@ -53,7 +51,7 @@ npm run generate -- vaga.txt
 | `npm run init` | Create `data.json` template |
 | `npm run generate -- arquivo_vaga.txt` | Generate CV adapted to the job |
 
-## Flags
+## Flags for `generate` command
 
 | Flag | Description |
 |------|-------------|
@@ -80,7 +78,7 @@ Your resume data lives in `data.json` (gitignored). Edit it directly to add metr
 
 ## Custom Prompts
 
-AI behavior is controlled by two files:
+AI behavior for rewriting is controlled by two files:
 
 | File | Purpose |
 |------|---------|
@@ -106,6 +104,31 @@ Valid keys per section:
 
 - **`rewriteBullets.system`**: `rules` (merged by key), `examples` (replaces), `preamble` (replaces)
 - **`rewriteSummary.system`**: `rules` (merged by key)
-- **`translateRest.system`**: `rules` (merged by key)
 
-You can freely add or replace rules without touching any code.
+## Translation
+
+When `--lang` is not English, the AI translates the resume. Configured separately:
+
+| File | Purpose |
+|------|---------|
+| `translation.template.json` | Default translation rules |
+| `translation.custom.json` | Your custom overrides |
+
+Inside `langRules` (in `translation.custom.json`), each key is a language code (ISO 639-1 or BCP 47 like `pt-BR`), and must match the value passed to `--lang`. The value is an array of additional instructions — the base "Write all output in {language}" is always prepended automatically. Example — `translation.custom.json`:
+
+```json
+{
+  "langRules": {
+    "pt-BR": [
+      "Use an impersonal tone. Do not refer to self.",
+      "Use masculine gender consistently when referring to the developer"
+    ],
+    "fr": [
+      "Use formal tone (vous)",
+      "Use feminine gender"
+    ]
+  }
+}
+```
+
+This is the right place to adjust control tone, gender, formality for each language. The template handles the core translation rules; the custom file is only for language-specific writing instructions.
