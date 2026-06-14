@@ -48,8 +48,8 @@ npm run generate -- vaga.txt
 With flags:
 
 ```bash
-npm run generate -- vaga.txt --lang pt
-# Output: output/cv-pt.pdf
+npm run generate -- vaga.txt --lang pt-BR
+# Output: output/cv-pt-BR.pdf
 ```
 
 ## Commands
@@ -63,7 +63,7 @@ npm run generate -- vaga.txt --lang pt
 
 | Flag | Description |
 |------|-------------|
-| `--lang pt, -l pt` | Output in Brazilian Portuguese |
+| `--lang pt-BR, -l pt-BR` | Output in Brazilian Portuguese |
 | `--extract` | Extract plain text alongside PDF as `.txt` |
 | `--skip-range YYYY-YYYY` | Omit experiences falling entirely within a year range |
 
@@ -71,8 +71,8 @@ npm run generate -- vaga.txt --lang pt
 
 ```bash
 # Portuguese CV
-npm run generate -- vaga.txt --lang pt
-# Output: output/cv-pt.pdf
+npm run generate -- vaga.txt --lang pt-BR
+# Output: output/cv-pt-BR.pdf
 
 # Extract text for copy-paste
 npm run generate -- vaga.txt --extract
