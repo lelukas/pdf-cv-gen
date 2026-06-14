@@ -1,14 +1,35 @@
 # PDF CV Generator
 
-AI-powered resume builder that adapts your CV to each job description. Uses DeepSeek API to rewrite bullet points and summary to match the target role.
+AI-powered resume builder that adapts your CV to each job description. Uses any OpenAI-compatible API to rewrite bullet points and summary to match the target role.
 
 ## Setup
 
 ```bash
 cp .env.example .env
-# Add your DEEPSEEK_API_KEY to .env
 npm install
 ```
+
+Configure your AI provider in `.env`:
+
+| Variable | Description |
+|----------|-------------|
+| `AI_API_KEY` | Your API key |
+| `AI_BASE_URL` | API base URL |
+| `AI_MODEL` | Model name |
+| `AI_RESPONSE_PATH` | Response path in the API output |
+
+Default values for DeepSeek (OpenAI-compatible):
+
+```env
+AI_API_KEY=sk-your-key
+AI_BASE_URL=https://api.deepseek.com
+AI_MODEL=deepseek-chat
+AI_RESPONSE_PATH=choices.0.message.content
+```
+
+For any other OpenAI-compatible provider, just change the values. The `AI_RESPONSE_PATH` follows dot notation with numeric indices for arrays (e.g., `choices.0.message.content`).
+
+## Quick Start
 
 ## Quick Start
 
