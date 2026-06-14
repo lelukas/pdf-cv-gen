@@ -96,8 +96,7 @@ async function main() {
   }
 
   const { jobPath, lang, extract, skipRange } = parseArgs(args)
-  const langSuffix = lang !== 'en' ? `-${lang}` : ''
-  const OUTPUT_PATH = `cv${langSuffix}.pdf`
+  const OUTPUT_PATH = `cv-${lang}.pdf`
 
   if (!jobPath) {
     console.error('Usage:')
