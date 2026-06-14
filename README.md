@@ -42,6 +42,14 @@ Generate a CV from a job description file:
 
 ```bash
 npm run generate -- vaga.txt
+# Output: output/cv-en.pdf
+```
+
+With flags:
+
+```bash
+npm run generate -- vaga.txt --lang pt
+# Output: output/cv-pt.pdf
 ```
 
 ## Commands
@@ -49,7 +57,7 @@ npm run generate -- vaga.txt
 | Command | Description |
 |---------|-------------|
 | `npm run init` | Create `data.json` template |
-| `npm run generate -- arquivo_vaga.txt` | Generate CV adapted to the job |
+| `npm run generate -- arquivo_vaga.txt` | Generate CV adapted to the job (output in `output/` folder) |
 
 ## Flags for `generate` command
 
@@ -64,13 +72,19 @@ npm run generate -- vaga.txt
 ```bash
 # Portuguese CV
 npm run generate -- vaga.txt --lang pt
+# Output: output/cv-pt.pdf
 
 # Extract text for copy-paste
 npm run generate -- vaga.txt --extract
+# Output: output/cv-en.pdf + output/cv-en.txt
 
 # Skip experiences before 2020
 npm run generate -- vaga.txt --skip-range 2017-2019
 ```
+
+## Output
+
+Generated PDFs and text files are saved to the `output/` directory (gitignored).
 
 ## Data Source
 

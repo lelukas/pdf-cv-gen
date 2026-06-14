@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { readFileSync, existsSync, writeFileSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs'
 import puppeteer from 'puppeteer'
 import { ResumeData } from './types.js'
 import { generateHtml } from './template.js'
@@ -102,7 +102,8 @@ async function main() {
   }
 
   const { jobPath, lang, extract, skipRange } = parseArgs(args)
-  const OUTPUT_PATH = `cv-${lang}.pdf`
+  const OUTPUT_PATH = `output/cv-${lang}.pdf`
+  mkdirSync('output', { recursive: true })
 
   if (!jobPath) {
     console.error('Usage:')
