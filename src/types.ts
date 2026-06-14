@@ -1,42 +1,42 @@
-export interface Experiencia {
-  empresa: string
-  periodo: string
-  cargo: string
-  topicos: string[]
+export interface Experience {
+  company: string
+  period: string
+  role: string
+  bullets: string[]
 }
 
-export interface Formacao {
-  nome: string
-  instituicao: string
-  tipo?: string
-  anoInicio: number
-  anoFim: number
+export interface Education {
+  course: string
+  institution: string
+  type?: string
+  startYear: number
+  endYear: number
 }
 
-export interface Idioma {
-  idioma: string
-  nivel?: string
+export interface Language {
+  language: string
+  level?: string
 }
 
-export interface Contato {
-  localizacao?: string
+export interface Contact {
+  location?: string
   links?: string[]
-  telefone?: string
+  phone?: string
   email?: string
 }
 
-export interface CurriculoData {
-  nome: string
-  cargo?: string
-  contato?: Contato
-  resumo?: string
-  categorias_skills?: Record<string, string[]>
-  praticas?: string
-  habilidades?: string[]
-  experiencias: Experiencia[]
-  formacao?: Formacao[]
-  certificacoes?: string[]
-  idiomas?: Idioma[]
+export interface ResumeData {
+  name: string
+  role?: string
+  contact?: Contact
+  summary?: string
+  skillCategories?: Record<string, string[]>
+  practices?: string
+  skills?: string[]
+  experience: Experience[]
+  education?: Education[]
+  certifications?: string[]
+  languages?: Language[]
   _titles?: {
     skills: string
     practices: string

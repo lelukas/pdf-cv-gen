@@ -1,45 +1,45 @@
 import 'dotenv/config'
 import { readFileSync, existsSync, writeFileSync } from 'fs'
 import puppeteer from 'puppeteer'
-import { CurriculoData } from './types.js'
-import { gerarHtml } from './template.js'
+import { ResumeData } from './types.js'
+import { generateHtml } from './template.js'
 import { rewriteBullets, rewriteSummary, translateRest } from './ai.js'
 
-const EXPERIENCIAS_PATH = 'data.json'
+const DATA_PATH = 'data.json'
 
-const TEMPLATE_EXPERIENCIAS: CurriculoData = {
-  nome: 'SEU_NOME',
-  cargo: 'SEU_CARGO',
-  contato: {
-    localizacao: 'SUA_LOCALIZACAO',
-    links: ['https://seusite.com', 'https://linkedin.com/in/seuperfil'],
-    telefone: 'SEU_TELEFONE',
-    email: 'seu@email.com',
+const TEMPLATE_DATA: ResumeData = {
+  name: 'YOUR_NAME',
+  role: 'YOUR_ROLE',
+  contact: {
+    location: 'YOUR_LOCATION',
+    links: ['https://your-site.com', 'https://linkedin.com/in/your-profile'],
+    phone: 'YOUR_PHONE',
+    email: 'your@email.com',
   },
-  resumo: 'SEU_RESUMO',
-  categorias_skills: {
+  summary: 'YOUR_SUMMARY',
+  skillCategories: {
     Frontend: ['React', 'TypeScript'],
   },
-  praticas: 'SUAS_PRATICAS',
-  experiencias: [
+  practices: 'YOUR_PRACTICES',
+  experience: [
     {
-      empresa: 'SUA_EMPRESA',
-      periodo: 'MES ANO – MES ANO',
-      cargo: 'SEU_CARGO',
-      topicos: ['Bullet 1: descreva seu resultado com métrica', 'Bullet 2: destaque liderança ou impacto no negócio'],
+      company: 'YOUR_COMPANY',
+      period: 'MON YEAR – MON YEAR',
+      role: 'YOUR_ROLE',
+      bullets: ['Bullet 1: describe your result with metrics', 'Bullet 2: highlight leadership or business impact'],
     },
   ],
-  formacao: [{ nome: 'SEU_CURSO', instituicao: 'SUA_INSTITUICAO', tipo: 'SEU_TIPO', anoInicio: 2020, anoFim: 2024 }],
-  idiomas: [{ idioma: 'SEU_IDIOMA', nivel: 'SEU_NIVEL' }],
+  education: [{ course: 'YOUR_COURSE', institution: 'YOUR_INSTITUTION', type: 'YOUR_DEGREE', startYear: 2020, endYear: 2024 }],
+  languages: [{ language: 'YOUR_LANGUAGE', level: 'YOUR_LEVEL' }],
 }
 
 function initCommand() {
-  if (existsSync(EXPERIENCIAS_PATH)) {
-    console.error(`Arquivo ${EXPERIENCIAS_PATH} já existe. Remova-o primeiro ou edite manualmente.`)
+  if (existsSync(DATA_PATH)) {
+    console.error(`File ${DATA_PATH} already exists. Remove it or edit manually.`)
     process.exit(1)
   }
-  writeFileSync(EXPERIENCIAS_PATH, JSON.stringify(TEMPLATE_EXPERIENCIAS, null, 2) + '\n')
-  console.log(`Template criado: ${EXPERIENCIAS_PATH}`)
+  writeFileSync(DATA_PATH, JSON.stringify(TEMPLATE_DATA, null, 2) + '\n')
+  console.log(`Template created: ${DATA_PATH}`)
 
   const PROMPTS_CUSTOM_PATH = 'prompts.custom.json'
   if (!existsSync(PROMPTS_CUSTOM_PATH)) {
@@ -49,18 +49,18 @@ function initCommand() {
       translateRest: { system: { rules: {} } },
     }
     writeFileSync(PROMPTS_CUSTOM_PATH, JSON.stringify(custom, null, 2) + '\n')
-    console.log(`Custom prompts criado: ${PROMPTS_CUSTOM_PATH}`)
+    console.log(`Custom prompts created: ${PROMPTS_CUSTOM_PATH}`)
   }
 
-  console.log('Edite os arquivos com seus dados e execute: npm run generate -- caminho/para/vaga.txt')
+  console.log('Edit the files with your data and run: npm run generate -- path/to/job.txt')
 }
 
-function parseAno(periodo: string): { inicio: number; fim: number } {
-  const anos = [...periodo.matchAll(/\b(\d{4})\b/g)].map((m) => parseInt(m[1]))
-  return { inicio: anos[0], fim: anos[anos.length - 1] }
+function parseYear(period: string): { start: number; end: number } {
+  const years = [...period.matchAll(/\b(\d{4})\b/g)].map((m) => parseInt(m[1]))
+  return { start: years[0], end: years[years.length - 1] }
 }
 
-function parseArgs(args: string[]): { vagaPath: string; lang: string; extract: boolean; skipRange: [number, number] | null } {
+function parseArgs(args: string[]): { jobPath: string; lang: string; extract: boolean; skipRange: [number, number] | null } {
   let lang = 'en'
   let extract = false
   let skipRange: [number, number] | null = null
@@ -76,7 +76,7 @@ function parseArgs(args: string[]): { vagaPath: string; lang: string; extract: b
       if (match) {
         skipRange = [parseInt(match[1]), parseInt(match[2])]
       } else {
-        console.error('Formato inválido para --skip-range. Use YYYY-YYYY (ex: --skip-range 2017-2019)')
+        console.error('Invalid format for --skip-range. Use YYYY-YYYY (e.g. --skip-range 2017-2019)')
         process.exit(1)
       }
     } else {
@@ -84,7 +84,7 @@ function parseArgs(args: string[]): { vagaPath: string; lang: string; extract: b
     }
   }
 
-  return { vagaPath: filtered[0], lang, extract, skipRange }
+  return { jobPath: filtered[0], lang, extract, skipRange }
 }
 
 async function main() {
@@ -95,89 +95,89 @@ async function main() {
     return
   }
 
-  const { vagaPath, lang, extract, skipRange } = parseArgs(args)
+  const { jobPath, lang, extract, skipRange } = parseArgs(args)
   const langSuffix = lang !== 'en' ? `-${lang}` : ''
   const OUTPUT_PATH = `cv${langSuffix}.pdf`
 
-  if (!vagaPath) {
-    console.error('Uso:')
-    console.error('  npm run init            # Cria data.json template')
-    console.error('  npm run generate -- caminho/para/vaga.txt')
+  if (!jobPath) {
+    console.error('Usage:')
+    console.error('  npm run init              # Create data.json template')
+    console.error('  npm run generate -- path/to/job.txt')
     console.error('')
-    console.error('Flags opcionais:')
-    console.error('  --lang pt, -l pt        # Gera currículo em português')
-    console.error('  --extract               # Extrai texto do PDF como .txt')
-    console.error('  --skip-range YYYY-YYYY  # Omite experiências no range de anos')
+    console.error('Optional flags:')
+    console.error('  --lang pt, -l pt          # Output in Portuguese')
+    console.error('  --extract                 # Extract text alongside PDF as .txt')
+    console.error('  --skip-range YYYY-YYYY    # Omit experiences within year range')
     console.error('')
-    console.error('Exemplos:')
-    console.error('  npm run generate -- vaga.txt --lang pt')
-    console.error('  npm run generate -- vaga.txt --extract')
-    console.error('  npm run generate -- vaga.txt --skip-range 2017-2019')
+    console.error('Examples:')
+    console.error('  npm run generate -- job.txt --lang pt')
+    console.error('  npm run generate -- job.txt --extract')
+    console.error('  npm run generate -- job.txt --skip-range 2017-2019')
     process.exit(1)
   }
 
-  let dados: CurriculoData
+  let data: ResumeData
   try {
-    dados = JSON.parse(readFileSync(EXPERIENCIAS_PATH, 'utf-8'))
+    data = JSON.parse(readFileSync(DATA_PATH, 'utf-8'))
   } catch {
-    console.error(`Erro: arquivo ${EXPERIENCIAS_PATH} não encontrado ou inválido`)
+    console.error(`Error: ${DATA_PATH} not found or invalid. Run npm run init first.`)
     process.exit(1)
   }
 
-  let descricaoVaga: string
-  if (existsSync(vagaPath)) {
-    descricaoVaga = readFileSync(vagaPath, 'utf-8')
+  let jobDescription: string
+  if (existsSync(jobPath)) {
+    jobDescription = readFileSync(jobPath, 'utf-8')
   } else {
-    console.error(`Arquivo não encontrado: ${vagaPath}`)
+    console.error(`File not found: ${jobPath}`)
     process.exit(1)
   }
 
-  console.log(`Adaptando currículo para a vaga (${lang})...`)
-  const dadosAdaptados = { ...dados }
+  console.log(`Adapting resume for the job (${lang})...`)
+  const adaptedData = { ...data }
 
   if (skipRange) {
-    const [skipInicio, skipFim] = skipRange
-    const antes = dadosAdaptados.experiencias.length
-    dadosAdaptados.experiencias = dadosAdaptados.experiencias.filter((e) => {
-      const { inicio, fim } = parseAno(e.periodo)
-      const dentro = inicio >= skipInicio && fim <= skipFim
-      if (dentro) console.log(`  Omitido: ${e.empresa} (${e.periodo})`)
-      return !dentro
+    const [skipStart, skipEnd] = skipRange
+    const before = adaptedData.experience.length
+    adaptedData.experience = adaptedData.experience.filter((e) => {
+      const { start, end } = parseYear(e.period)
+      const inside = start >= skipStart && end <= skipEnd
+      if (inside) console.log(`  Omitted: ${e.company} (${e.period})`)
+      return !inside
     })
-    console.log(`Entradas omitidas: ${antes - dadosAdaptados.experiencias.length}`)
+    console.log(`Entries omitted: ${before - adaptedData.experience.length}`)
   }
 
-  console.log('Reescrevendo topicos com IA...')
+  console.log('Rewriting bullets with AI...')
   try {
-    const experienciasReescritas = await rewriteBullets(dadosAdaptados.experiencias, descricaoVaga, lang)
-    dadosAdaptados.experiencias = experienciasReescritas
+    const rewritten = await rewriteBullets(adaptedData.experience, jobDescription, lang)
+    adaptedData.experience = rewritten
   } catch (err: any) {
-    console.warn('Aviso: reescrita de topicos falhou, usando originais:', err.message)
+    console.warn('Warning: bullet rewrite failed, using originals:', err.message)
   }
 
-  if (dadosAdaptados.resumo) {
-    console.log('Reescrevendo resumo com IA...')
-    const topicosContext = dadosAdaptados.experiencias.map((e) => `[${e.empresa}] ${e.cargo}: ${e.topicos.join('; ')}`).join('\n')
+  if (adaptedData.summary) {
+    console.log('Rewriting summary with AI...')
+    const bulletsContext = adaptedData.experience.map((e) => `[${e.company}] ${e.role}: ${e.bullets.join('; ')}`).join('\n')
     try {
-      dadosAdaptados.resumo = await rewriteSummary(dadosAdaptados.resumo, descricaoVaga, lang, topicosContext)
+      adaptedData.summary = await rewriteSummary(adaptedData.summary, jobDescription, lang, bulletsContext)
     } catch (err: any) {
-      console.warn('Aviso: reescrita do resumo falhou, mantendo original:', err.message)
+      console.warn('Warning: summary rewrite failed, using original:', err.message)
     }
   }
 
   if (lang !== 'en') {
     try {
-      const traduzido = await translateRest(
+      const translated = await translateRest(
         {
-          praticas: dadosAdaptados.praticas,
-          formacao: (dadosAdaptados.formacao || []).map((f) => ({
-            nome: f.nome,
-            tipo: f.tipo,
-            instituicao: f.instituicao,
+          practices: adaptedData.practices,
+          education: (adaptedData.education || []).map((f) => ({
+            course: f.course,
+            type: f.type,
+            institution: f.institution,
           })),
-          idiomas: (dadosAdaptados.idiomas || []).map((i) => ({
-            idioma: i.idioma,
-            nivel: i.nivel,
+          languages: (adaptedData.languages || []).map((i) => ({
+            language: i.language,
+            level: i.level,
           })),
           _titles: {
             skills: 'Technical Skills',
@@ -189,33 +189,33 @@ async function main() {
         },
         lang,
       )
-      dadosAdaptados.praticas = traduzido.praticas
-      if (traduzido.formacao) {
-        traduzido.formacao.forEach((f, i) => {
-          if (dadosAdaptados.formacao?.[i]) {
-            dadosAdaptados.formacao[i].nome = f.nome
-            if (f.tipo) dadosAdaptados.formacao[i].tipo = f.tipo
+      adaptedData.practices = translated.practices
+      if (translated.education) {
+        translated.education.forEach((f, i) => {
+          if (adaptedData.education?.[i]) {
+            adaptedData.education[i].course = f.course
+            if (f.type) adaptedData.education[i].type = f.type
           }
         })
       }
-      if (traduzido.idiomas) {
-        traduzido.idiomas.forEach((langItem, i) => {
-          if (dadosAdaptados.idiomas?.[i]) {
-            dadosAdaptados.idiomas[i].idioma = langItem.idioma
-            if (langItem.nivel) dadosAdaptados.idiomas[i].nivel = langItem.nivel
+      if (translated.languages) {
+        translated.languages.forEach((langItem, i) => {
+          if (adaptedData.languages?.[i]) {
+            adaptedData.languages[i].language = langItem.language
+            if (langItem.level) adaptedData.languages[i].level = langItem.level
           }
         })
       }
-      if (traduzido._titles) {
-        dadosAdaptados._titles = traduzido._titles
+      if (translated._titles) {
+        adaptedData._titles = translated._titles
       }
     } catch (err: any) {
-      console.warn('Aviso: tradução de campos estáticos falhou:', err.message)
+      console.warn('Warning: translation failed, keeping English:', err.message)
     }
   }
 
-  console.log('Gerando PDF...')
-  const html = gerarHtml(dadosAdaptados)
+  console.log('Generating PDF...')
+  const html = generateHtml(adaptedData)
 
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
@@ -227,17 +227,17 @@ async function main() {
   })
 
   if (extract) {
-    const textoPuro = await page.evaluate(() => document.body.innerText)
+    const text = await page.evaluate(() => document.body.innerText)
     const txtPath = OUTPUT_PATH.replace(/\.pdf$/, '.txt')
-    writeFileSync(txtPath, textoPuro, 'utf-8')
-    console.log(`Texto extraído: ${txtPath}`)
+    writeFileSync(txtPath, text, 'utf-8')
+    console.log(`Text extracted: ${txtPath}`)
   }
 
   await browser.close()
-  console.log(`PDF gerado: ${OUTPUT_PATH}`)
+  console.log(`PDF generated: ${OUTPUT_PATH}`)
 }
 
 main().catch((err) => {
-  console.error('Erro:', err.message)
+  console.error('Error:', err.message)
   process.exit(1)
 })

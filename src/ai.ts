@@ -1,5 +1,5 @@
 import { readFileSync, existsSync } from 'fs'
-import { Experiencia } from './types.js'
+import { Experience } from './types.js'
 
 function getConfig() {
   const key = process.env.AI_API_KEY
@@ -125,25 +125,25 @@ function languageName(code: string): string {
   }
 }
 
-export async function rewriteBullets(experiencias: Experiencia[], descricaoVaga: string, lang: string = 'en'): Promise<Experiencia[]> {
+export async function rewriteBullets(experiences: Experience[], jobDescription: string, lang: string = 'en'): Promise<Experience[]> {
   const prompts = loadPrompts()
   const systemPrompt = buildPrompt(prompts.rewriteBullets.system, lang)
 
   const userPrompt = `Job Description:
-${descricaoVaga}
+${jobDescription}
 
 My current experience entries (company, role, period, and original bullets):
 
-${JSON.stringify(experiencias, null, 2)}
+${JSON.stringify(experiences, null, 2)}
 
-Return a JSON array where each object has the same "empresa", "periodo" fields, but "cargo" and "topicos" are rewritten for this job. Format:
+Return a JSON array where each object has the same "company", "period" fields, but "role" and "bullets" are rewritten for this job. Format:
 
 [
   {
-    "empresa": "...",
-    "periodo": "...",
-    "cargo": "...",
-    "topicos": ["rewritten bullet 1", "rewritten bullet 2"]
+    "company": "...",
+    "period": "...",
+    "role": "...",
+    "bullets": ["rewritten bullet 1", "rewritten bullet 2"]
   }
 ]`
 
@@ -155,7 +155,7 @@ Return a JSON array where each object has the same "empresa", "periodo" fields, 
   const cleaned = result.replace(/```(?:json)?\n?/g, '').trim()
   return JSON.parse(cleaned)
 }
-export async function rewriteSummary(resumo: string, descricaoVaga: string, lang: string = 'en', topicosContext?: string): Promise<string> {
+export async function rewriteSummary(summary: string, jobDescription: string, lang: string = 'en', bulletsContext?: string): Promise<string> {
   const prompts = loadPrompts()
   const preamble = prompts.rewriteSummary.system.preamble
   const rules = Object.values(prompts.rewriteSummary.system.rules)
@@ -165,13 +165,13 @@ export async function rewriteSummary(resumo: string, descricaoVaga: string, lang
   const systemPrompt = `${preamble}\n\n${rules}\n${langRulesText}`
 
   const userPrompt = `Job Description:
-${descricaoVaga}
+${jobDescription}
 
 Current summary:
-${resumo}
+${summary}
 
 Candidate's rewritten bullet points for this job:
-${topicosContext || ''}
+${bulletsContext || ''}
 
 Rewritten summary:`
   return (
@@ -183,9 +183,9 @@ Rewritten summary:`
 }
 
 interface DadosTraduzir {
-  praticas?: string
-  formacao: { nome: string; tipo?: string; instituicao: string }[]
-  idiomas: { idioma: string; nivel?: string }[]
+  practices?: string
+  education: { course: string; type?: string; institution: string }[]
+  languages: { language: string; level?: string }[]
   _titles: {
     skills: string
     practices: string

@@ -12,7 +12,7 @@
         "strong_verbs": "Use strong action verbs (led, drove, built, implemented, optimized, delivered)",
         "concise": "Be concise — each bullet should be 1 line",
         "periods": "Use periods, not hyphens or dashes, to separate phrases",
-        "translate_cargo": "Translate the \"cargo\" (job title) to match the target language",
+        "translate_role": "Translate the \"role\" (job title) to match the target language",
         "json_output": "Return ONLY valid JSON, no explanation"
       },
       "examples": [

@@ -1,17 +1,17 @@
-import { CurriculoData } from './types.js'
+import { ResumeData } from './types.js'
 
-export function gerarHeader(dados: CurriculoData): string {
-  const contato = dados.contato
-  if (!contato) return ''
+export function generateHeader(data: ResumeData): string {
+  const contact = data.contact
+  if (!contact) return ''
 
-  const telefoneEmail = [contato.telefone, contato.email].filter(Boolean).join(' • ')
-  const linksStr = (contato.links || []).join(' • ')
+  const phoneEmail = [contact.phone, contact.email].filter(Boolean).join(' • ')
+  const linksStr = (contact.links || []).join(' • ')
 
   return `
-    <div class="name">${dados.nome}</div>
-    <div class="header-subtitle">${dados.cargo || ''}</div>
-    <div class="header-subtitle">${contato.localizacao || ''}</div>
-    <div class="header-contacts">${telefoneEmail}</div>
+    <div class="name">${data.name}</div>
+    <div class="header-subtitle">${data.role || ''}</div>
+    <div class="header-subtitle">${contact.location || ''}</div>
+    <div class="header-contacts">${phoneEmail}</div>
     <div class="header-links">${linksStr}</div>
   `
 }
