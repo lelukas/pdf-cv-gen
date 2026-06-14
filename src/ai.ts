@@ -1,6 +1,36 @@
 import { readFileSync, existsSync } from 'fs'
 import { Experience } from './types.js'
 
+interface Message {
+  role: 'system' | 'user' | 'assistant'
+  content: string
+}
+
+interface PromptSection {
+  preamble: string
+  rules: Record<string, string>
+  examples?: string[]
+}
+
+interface PromptsFile {
+  rewriteBullets: { system: PromptSection }
+  rewriteSummary: { system: Pick<PromptSection, 'preamble' | 'rules'> }
+  translateRest: { system: Pick<PromptSection, 'preamble' | 'rules'> }
+}
+
+interface DadosTraduzir {
+  practices?: string
+  education: { course: string; type?: string; institution: string }[]
+  languages: { language: string; level?: string }[]
+  _titles: {
+    skills: string
+    practices: string
+    experience: string
+    education: string
+    languages: string
+  }
+}
+
 function getConfig() {
   const key = process.env.AI_API_KEY
   const baseUrl = process.env.AI_BASE_URL
@@ -21,18 +51,6 @@ function getNested(obj: any, path: string[]): any {
     const idx = parseInt(key)
     return Number.isNaN(idx) ? acc[key] : acc[idx]
   }, obj)
-}
-
-interface PromptSection {
-  preamble: string
-  rules: Record<string, string>
-  examples?: string[]
-}
-
-interface PromptsFile {
-  rewriteBullets: { system: PromptSection }
-  rewriteSummary: { system: Pick<PromptSection, 'preamble' | 'rules'> }
-  translateRest: { system: Pick<PromptSection, 'preamble' | 'rules'> }
 }
 
 function loadPrompts(): PromptsFile {
@@ -61,11 +79,6 @@ function buildPrompt(section: PromptSection, lang: string): string {
   if (section.examples) lines.push('', ...section.examples)
   lines.push('', '- ' + langRules(lang).join('\n- '))
   return lines.join('\n')
-}
-
-interface Message {
-  role: 'system' | 'user' | 'assistant'
-  content: string
 }
 
 async function callAI(messages: Message[]): Promise<string> {
@@ -180,19 +193,6 @@ Rewritten summary:`
       { role: 'user', content: userPrompt },
     ])
   ).trim()
-}
-
-interface DadosTraduzir {
-  practices?: string
-  education: { course: string; type?: string; institution: string }[]
-  languages: { language: string; level?: string }[]
-  _titles: {
-    skills: string
-    practices: string
-    experience: string
-    education: string
-    languages: string
-  }
 }
 
 export async function translateRest(dados: DadosTraduzir, lang: string): Promise<DadosTraduzir> {
