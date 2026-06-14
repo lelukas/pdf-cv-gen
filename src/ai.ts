@@ -169,8 +169,7 @@ Return a JSON array where each object has the same "company", "period" fields, b
     { role: 'user', content: userPrompt },
   ])
 
-  const cleaned = result.replace(/```(?:json)?\n?/g, '').trim()
-  return JSON.parse(cleaned)
+  return JSON.parse(result)
 }
 export async function rewriteSummary(summary: string, jobDescription: string, lang: string = 'en', bulletsContext?: string): Promise<string> {
   const prompts = loadPrompts()
@@ -243,6 +242,5 @@ Return the same structure with fields translated.`
     { role: 'user', content: userPrompt },
   ])
 
-  const cleaned = result.replace(/```(?:json)?\n?/g, '').trim()
-  return JSON.parse(cleaned)
+  return JSON.parse(result)
 }
