@@ -37,4 +37,11 @@ export interface CurriculoData {
   formacao?: Formacao[]
   certificacoes?: string[]
   idiomas?: Idioma[]
+  _titles?: {
+    skills: string
+    practices: string
+    experience: string
+    education: string
+    languages: string
+  }
 }

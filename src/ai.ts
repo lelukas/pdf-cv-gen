@@ -1,6 +1,5 @@
 import { readFileSync, existsSync } from 'fs'
 import { Experiencia } from './types.js'
-import { Lang } from './i18n.js'
 
 function getConfig() {
   const key = process.env.AI_API_KEY
@@ -57,10 +56,10 @@ function deepMerge(base: any, extra: any): any {
   return result
 }
 
-function buildPrompt(section: PromptSection, lang: Lang): string {
+function buildPrompt(section: PromptSection, lang: string): string {
   const lines = [section.preamble, '', ...Object.values(section.rules)]
   if (section.examples) lines.push('', ...section.examples)
-  lines.push('', '- ' + LANG_RULES[lang].join('\n- '))
+  lines.push('', '- ' + langRules(lang).join('\n- '))
   return lines.join('\n')
 }
 
@@ -100,16 +99,33 @@ async function callAI(messages: Message[]): Promise<string> {
   return result
 }
 
-const LANG_RULES: Record<Lang, string[]> = {
+const LANG_RULES: Record<string, string[]> = {
   en: ['Write all output in English'],
   pt: [
     'Write all output in Brazilian Portuguese',
     'Use an impersonal tone. Do not refer to self. Use words like "atuação", "construção", "implementação", "adição", "migração". Examples: Built -> Construção, Developed -> Desenvolvimento de',
     'Use masculine gender consistently when referring to the developer (e.g., "responsável", "alocado", "designado", "contratado")',
   ],
+  es: [
+    'Write all output in Spanish',
+    'Use an impersonal tone. Do not refer to self.',
+    'Use masculine gender consistently when referring to the developer',
+  ],
 }
 
-export async function rewriteBullets(experiencias: Experiencia[], descricaoVaga: string, lang: Lang = 'en'): Promise<Experiencia[]> {
+function langRules(lang: string): string[] {
+  return LANG_RULES[lang] || [`Write all output in ${languageName(lang)}`]
+}
+
+function languageName(code: string): string {
+  try {
+    return new Intl.DisplayNames('en', { type: 'language' }).of(code) || code
+  } catch {
+    return code
+  }
+}
+
+export async function rewriteBullets(experiencias: Experiencia[], descricaoVaga: string, lang: string = 'en'): Promise<Experiencia[]> {
   const prompts = loadPrompts()
   const systemPrompt = buildPrompt(prompts.rewriteBullets.system, lang)
 
@@ -139,14 +155,14 @@ Return a JSON array where each object has the same "empresa", "periodo" fields, 
   const cleaned = result.replace(/```(?:json)?\n?/g, '').trim()
   return JSON.parse(cleaned)
 }
-export async function rewriteSummary(resumo: string, descricaoVaga: string, lang: Lang = 'en', topicosContext?: string): Promise<string> {
+export async function rewriteSummary(resumo: string, descricaoVaga: string, lang: string = 'en', topicosContext?: string): Promise<string> {
   const prompts = loadPrompts()
   const preamble = prompts.rewriteSummary.system.preamble
   const rules = Object.values(prompts.rewriteSummary.system.rules)
     .map((r) => `- ${r}`)
     .join('\n')
-  const langRules = '- ' + LANG_RULES[lang].join('\n- ')
-  const systemPrompt = `${preamble}\n\n${rules}\n${langRules}`
+  const langRulesText = '- ' + langRules(lang).join('\n- ')
+  const systemPrompt = `${preamble}\n\n${rules}\n${langRulesText}`
 
   const userPrompt = `Job Description:
 ${descricaoVaga}
@@ -170,14 +186,36 @@ interface DadosTraduzir {
   praticas?: string
   formacao: { nome: string; tipo?: string; instituicao: string }[]
   idiomas: { idioma: string; nivel?: string }[]
+  _titles: {
+    skills: string
+    practices: string
+    experience: string
+    education: string
+    languages: string
+  }
 }
 
-export async function translateRest(dados: DadosTraduzir, lang: Lang): Promise<DadosTraduzir> {
-  if (lang === 'en') return dados
+export async function translateRest(dados: DadosTraduzir, lang: string): Promise<DadosTraduzir> {
+  const targetLang = languageName(lang)
+
+  if (lang === 'en') {
+    return {
+      ...dados,
+      _titles: dados._titles || {
+        skills: 'Technical Skills',
+        practices: 'Practices & Specialties',
+        experience: 'Professional Experience',
+        education: 'Education',
+        languages: 'Languages',
+      },
+    }
+  }
 
   const prompts = loadPrompts()
-  const preamble = prompts.translateRest.system.preamble
-  const rules = Object.values(prompts.translateRest.system.rules).map((r) => `- ${r}`).join('\n')
+  const preamble = `You are a translator. Translate the following resume fields from English to ${targetLang}.`
+  const rules = Object.values(prompts.translateRest.system.rules)
+    .map((r) => `- ${r}`)
+    .join('\n')
   const systemPrompt = `${preamble}\n\n${rules}`
 
   const userPrompt = `Translate this data to Brazilian Portuguese:

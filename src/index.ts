@@ -4,7 +4,6 @@ import puppeteer from 'puppeteer'
 import { CurriculoData } from './types.js'
 import { gerarHtml } from './template.js'
 import { rewriteBullets, rewriteSummary, translateRest } from './ai.js'
-import { Lang } from './i18n.js'
 
 const EXPERIENCIAS_PATH = 'data.json'
 
@@ -61,15 +60,15 @@ function parseAno(periodo: string): { inicio: number; fim: number } {
   return { inicio: anos[0], fim: anos[anos.length - 1] }
 }
 
-function parseArgs(args: string[]): { vagaPath: string; lang: Lang; extract: boolean; skipRange: [number, number] | null } {
-  let lang: Lang = 'en'
+function parseArgs(args: string[]): { vagaPath: string; lang: string; extract: boolean; skipRange: [number, number] | null } {
+  let lang = 'en'
   let extract = false
   let skipRange: [number, number] | null = null
   const filtered: string[] = []
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--lang' || args[i] === '-l') {
-      lang = (args[++i] as Lang) || 'en'
+      lang = args[++i] || 'en'
     } else if (args[i] === '--extract') {
       extract = true
     } else if (args[i] === '--skip-range' && args[i + 1]) {
@@ -166,7 +165,7 @@ async function main() {
     }
   }
 
-  if (lang === 'pt') {
+  if (lang !== 'en') {
     try {
       const traduzido = await translateRest(
         {
@@ -180,6 +179,13 @@ async function main() {
             idioma: i.idioma,
             nivel: i.nivel,
           })),
+          _titles: {
+            skills: 'Technical Skills',
+            practices: 'Practices & Specialties',
+            experience: 'Professional Experience',
+            education: 'Education',
+            languages: 'Languages',
+          },
         },
         lang,
       )
@@ -200,13 +206,16 @@ async function main() {
           }
         })
       }
+      if (traduzido._titles) {
+        dadosAdaptados._titles = traduzido._titles
+      }
     } catch (err: any) {
       console.warn('Aviso: tradução de campos estáticos falhou:', err.message)
     }
   }
 
   console.log('Gerando PDF...')
-  const html = gerarHtml(dadosAdaptados, lang)
+  const html = gerarHtml(dadosAdaptados)
 
   const browser = await puppeteer.launch()
   const page = await browser.newPage()

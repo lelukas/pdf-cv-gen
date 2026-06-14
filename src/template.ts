@@ -4,14 +4,20 @@ import { fileURLToPath } from 'url'
 import { CurriculoData } from './types.js'
 import { gerarHeader } from './header.js'
 import { FONT_FACE_CSS } from './fonts.js'
-import { t, Lang } from './i18n.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const CSS = readFileSync(join(__dirname, 'style.css'), 'utf-8')
 
 const BULLET = '\u2022'
 
-export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
+export function gerarHtml(dados: CurriculoData): string {
+  const titles = dados._titles || {
+    skills: 'Technical Skills',
+    practices: 'Practices & Specialties',
+    experience: 'Professional Experience',
+    education: 'Education',
+    languages: 'Languages',
+  }
   const experienciaHtml = dados.experiencias
     .map(
       (exp) => `
@@ -47,7 +53,7 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
   const sectionSkills =
     dados.categorias_skills || dados.habilidades?.length
       ? `<div class="section">
-      <div class="title-section">${t('Technical Skills', lang)}</div>
+      <div class="title-section">${titles.skills}</div>
       <div class="skills-section">
         ${skillsHtml}
       </div>
@@ -55,13 +61,13 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
       : ''
   const sectionPractices = dados.praticas
     ? `<div class="section">
-      <div class="title-section">${t('Practices & Specialties', lang)}</div>
+      <div class="title-section">${titles.practices}</div>
       <p>${dados.praticas}</p>
     </div>`
     : ''
   const sectionEducation = formacaoHtml
     ? `<div class="section">
-      <div class="title-section">${t('Education', lang)}</div>
+      <div class="title-section">${titles.education}</div>
       <ul>
         ${formacaoHtml}
       </ul>
@@ -69,7 +75,7 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
     : ''
   const sectionLanguages = dados.idiomas?.length
     ? `<div class="section">
-      <div class="title-section">${t('Languages', lang)}</div>
+      <div class="title-section">${titles.languages}</div>
       <ul>
         ${dados.idiomas.map((i) => `<li>${BULLET} ${i.idioma}${i.nivel ? ` (${i.nivel})` : ''}</li>`).join('\n        ')}
       </ul>
@@ -90,7 +96,7 @@ export function gerarHtml(dados: CurriculoData, lang: Lang = 'en'): string {
         ${sectionSkills}
         ${sectionPractices}
         <div class="section">
-          <div class="title-section">${t('Professional Experience', lang)}</div>
+          <div class="title-section">${titles.experience}</div>
           ${experienciaHtml}
         </div>
         ${sectionEducation}
