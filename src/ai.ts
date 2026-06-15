@@ -128,6 +128,10 @@ function loadLangRules(): Record<string, string[]> {
   return rules
 }
 
+function cleanJson(raw: string): string {
+  return raw.replace(/```(?:json)?\n?/g, '').trim()
+}
+
 function langRules(lang: string): string[] {
   const base = [`Write all output in ${languageName(lang)}`]
   const custom = loadLangRules()[lang]
@@ -169,7 +173,7 @@ Return a JSON array where each object has the same "company", "period" fields, b
     { role: 'user', content: userPrompt },
   ])
 
-  return JSON.parse(result)
+  return JSON.parse(cleanJson(result))
 }
 export async function rewriteSummary(summary: string, jobDescription: string, lang: string = 'en', bulletsContext?: string): Promise<string> {
   const prompts = loadPrompts()
@@ -242,5 +246,5 @@ Return the same structure with fields translated.`
     { role: 'user', content: userPrompt },
   ])
 
-  return JSON.parse(result)
+  return JSON.parse(cleanJson(result))
 }
