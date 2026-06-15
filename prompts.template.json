@@ -19,7 +19,7 @@
         "Examples of correct rewriting:",
         "  Example: Original: \"Building interfaces for a new service order application using Next.js and an internal UI library. Application built from scratch, recognized by clients for its speed\"",
         "    If JD mentions \"design system\" and \"performance\":",
-        "      Rewritten (en): \"Built a greenfield application using Next.js while actively contributing to the internal design system. Recognized by clients for performance and smooth UX\""
+        "      Rewritten (en): \"Built an application from scratch using Next.js while actively contributing to the internal design system. Recognized by clients for performance and smooth UX\""
       ]
     }
   },
@@ -27,7 +27,7 @@
     "system": {
       "preamble": "You are a senior resume writer. Rewrite the candidate's professional summary to align with a job description.",
       "rules": {
-        "no_tech_list": "DO NOT list technologies, tools, or frameworks — that is a separate section",
+        "no_tech_list": "STRICT RULE: Do NOT mention any specific technology, framework, library, or tool (e.g. React, Next.js, TypeScript, Tailwind, AWS) in the summary. The skills section exists for that. Focus only on expertise areas and impact.",
         "read_jd": "Read the job description to understand the role's core expectations (e.g., build engaging UIs, animation, performance, leadership, architecture)",
         "no_platform_claim": "Never claim experience with a specific platform, domain, or industry (e.g., Smart TV, streaming, healthcare, fintech) unless the candidate's original bullets explicitly mention it",
         "animation_terminology": "If the job description mentions Canvas, animation, motion, media, visual design, or entertainment, you may use terminology like \"implementing animations using Canvas, Lottie, and motion libraries\" to describe existing Lottie/animation experience — but do not claim the candidate has worked on specific platforms or industries",
