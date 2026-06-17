@@ -6,5 +6,5 @@ output
 *vaga*
 data.json
 cv-*.txt
-prompts.custom.json
-translation.custom.json
+config/prompts.custom.json
+config/translation.custom.json

@@ -41,7 +41,10 @@ function initCommand() {
   writeFileSync(DATA_PATH, JSON.stringify(TEMPLATE_DATA, null, 2) + '\n')
   console.log(`Template created: ${DATA_PATH}`)
 
-  const PROMPTS_CUSTOM_PATH = 'prompts.custom.json'
+  const CONFIG_DIR = 'config'
+  mkdirSync(CONFIG_DIR, { recursive: true })
+
+  const PROMPTS_CUSTOM_PATH = 'config/prompts.custom.json'
   if (!existsSync(PROMPTS_CUSTOM_PATH)) {
     const custom = {
       rewriteBullets: { system: { rules: {} } },
@@ -51,7 +54,7 @@ function initCommand() {
     console.log(`Custom prompts created: ${PROMPTS_CUSTOM_PATH}`)
   }
 
-  const TRANSLATION_CUSTOM_PATH = 'translation.custom.json'
+  const TRANSLATION_CUSTOM_PATH = 'config/translation.custom.json'
   if (!existsSync(TRANSLATION_CUSTOM_PATH)) {
     const custom = { langRules: {} }
     writeFileSync(TRANSLATION_CUSTOM_PATH, JSON.stringify(custom, null, 2) + '\n')

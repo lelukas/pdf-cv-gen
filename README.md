@@ -92,16 +92,16 @@ Your resume data lives in `data.json` (gitignored). Edit it directly to add metr
 
 ## Custom Prompts
 
-AI behavior for rewriting is controlled by two files:
+AI behavior for rewriting is controlled by two files in `config/`:
 
 | File | Purpose |
 |------|---------|
-| `prompts.template.json` | Default AI rules |
-| `prompts.custom.json` | Your custom overrides |
+| `config/prompts.template.json` | Default AI rules |
+| `config/prompts.custom.json` | Your custom overrides |
 
 Created automatically by `npm run init`. Custom rules are deep-merged into the template by key — you only need to define what you want to override.
 
-Example — `prompts.custom.json`:
+Example — `config/prompts.custom.json`:
 ```json
 {
   "rewriteBullets": {
@@ -116,19 +116,19 @@ Example — `prompts.custom.json`:
 
 Valid keys per section:
 
-- **`rewriteBullets.system`**: `rules` (merged by key), `examples` (replaces), `preamble` (replaces)
+- **`rewriteBullets.system`**: `rules` (merged by key), `examples` (concatenated), `preamble` (replaces)
 - **`rewriteSummary.system`**: `rules` (merged by key)
 
 ## Translation
 
-When `--lang` is not English, the AI translates the resume. Configured separately:
+When `--lang` is not English, the AI translates the resume. Configured separately in `config/`:
 
 | File | Purpose |
 |------|---------|
-| `translation.template.json` | Default translation rules |
-| `translation.custom.json` | Your custom overrides |
+| `config/translation.template.json` | Default translation rules |
+| `config/translation.custom.json` | Your custom overrides |
 
-Inside `langRules` (in `translation.custom.json`), each key is a language code (ISO 639-1 or BCP 47 like `pt-BR`), and must match the value passed to `--lang`. The value is an array of additional instructions — the base "Write all output in {language}" is always prepended automatically. Example — `translation.custom.json`:
+Inside `langRules` (in `config/translation.custom.json`), each key is a language code (ISO 639-1 or BCP 47 like `pt-BR`), and must match the value passed to `--lang`. The value is an array of additional instructions — the base "Write all output in {language}" is always prepended automatically. Example — `config/translation.custom.json`:
 
 ```json
 {

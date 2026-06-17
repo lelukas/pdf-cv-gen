@@ -58,9 +58,9 @@ function getNested(obj: any, path: string[]): any {
 }
 
 function loadPrompts(): PromptsFile {
-  const base = JSON.parse(readFileSync('prompts.template.json', 'utf-8'))
-  if (existsSync('prompts.custom.json')) {
-    const extra = JSON.parse(readFileSync('prompts.custom.json', 'utf-8'))
+  const base = JSON.parse(readFileSync('config/prompts.template.json', 'utf-8'))
+  if (existsSync('config/prompts.custom.json')) {
+    const extra = JSON.parse(readFileSync('config/prompts.custom.json', 'utf-8'))
     return deepMerge(base, extra)
   }
   return base
@@ -119,10 +119,10 @@ async function callAI(messages: Message[]): Promise<string> {
 }
 
 function loadLangRules(): Record<string, string[]> {
-  const base = JSON.parse(readFileSync('translation.template.json', 'utf-8'))
+  const base = JSON.parse(readFileSync('config/translation.template.json', 'utf-8'))
   const rules: Record<string, string[]> = { ...base.langRules }
-  if (existsSync('translation.custom.json')) {
-    const extra = JSON.parse(readFileSync('translation.custom.json', 'utf-8'))
+  if (existsSync('config/translation.custom.json')) {
+    const extra = JSON.parse(readFileSync('config/translation.custom.json', 'utf-8'))
     if (extra.langRules) {
       Object.assign(rules, extra.langRules)
     }
@@ -205,9 +205,9 @@ Rewritten summary:`
 }
 
 function loadTranslationPrompts(): TranslationPrompt {
-  const base = JSON.parse(readFileSync('translation.template.json', 'utf-8'))
-  if (existsSync('translation.custom.json')) {
-    const extra = JSON.parse(readFileSync('translation.custom.json', 'utf-8'))
+  const base = JSON.parse(readFileSync('config/translation.template.json', 'utf-8'))
+  if (existsSync('config/translation.custom.json')) {
+    const extra = JSON.parse(readFileSync('config/translation.custom.json', 'utf-8'))
     const merged = deepMerge(base, extra)
     return merged.system
   }
