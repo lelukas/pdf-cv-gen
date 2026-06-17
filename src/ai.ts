@@ -71,6 +71,8 @@ function deepMerge(base: any, extra: any): any {
   for (const key of Object.keys(extra)) {
     if (typeof extra[key] === 'object' && !Array.isArray(extra[key]) && typeof base[key] === 'object' && !Array.isArray(base[key])) {
       result[key] = deepMerge(base[key], extra[key])
+    } else if (Array.isArray(extra[key]) && Array.isArray(base[key])) {
+      result[key] = base[key].concat(extra[key])
     } else {
       result[key] = extra[key]
     }
