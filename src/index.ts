@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer'
 import { ResumeData } from './types.js'
 import { generateHtml } from './template.js'
 import { rewriteBullets, rewriteSummary, translateRest } from './ai.js'
+import { validateJsonFiles } from './utils.js'
 
 const DATA_PATH = 'data.json'
 
@@ -107,6 +108,14 @@ async function main() {
   const { jobPath, lang, extract, skipRange } = parseArgs(args)
   const OUTPUT_PATH = `output/cv-${lang}.pdf`
   mkdirSync('output', { recursive: true })
+
+  if (jobPath) {
+    console.log('Checking JSON files...')
+    if (!validateJsonFiles()) {
+      console.error('\nFix the errors above and try again.')
+      process.exit(1)
+    }
+  }
 
   if (!jobPath) {
     console.error('Usage:')
