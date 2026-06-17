@@ -12,7 +12,7 @@
         "strong_verbs": "Use strong action verbs (led, drove, built, implemented, optimized, delivered)",
         "concise": "Be concise — each bullet should be 1 line",
         "periods": "Use periods, not hyphens or dashes, to separate phrases",
-        "translate_role": "Translate the \"role\" (job title) to match the target language",
+        "keep_role": "CRITICAL: The \"role\" field must be copied verbatim from the input — never modify it. If the input says \"Software developer\", output \"Software developer\". If the input says \"Software engineer and project manager\", output \"Software engineer and project manager\". Do not prepend seniority levels (Staff, Senior, Junior) to the role. The only exception is capitalizing the first letter if needed.",
         "json_output": "Return ONLY valid JSON, no explanation"
       },
       "examples": [
