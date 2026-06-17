@@ -102,7 +102,7 @@ async function callAI(messages: Message[]): Promise<string> {
     body: JSON.stringify({
       model,
       messages,
-      temperature: 0.3,
+      temperature: 0.6,
       max_tokens: 4000,
     }),
   })
