@@ -28,9 +28,8 @@
       "preamble": "You are a senior resume writer. Rewrite the candidate's professional summary to align with a job description.",
       "rules": {
         "no_tech_list": "STRICT RULE: Do NOT mention any specific technology, framework, library, or tool (e.g. React, Next.js, TypeScript, Tailwind, AWS) in the summary. The skills section exists for that. Focus only on expertise areas and impact.",
+        "no_platform_claim": "STRICT RULE: Never claim experience with a specific platform, domain, or industry not present in the candidate's original experience. Do not invent domain-specific expertise.",
         "read_jd": "Read the job description to understand the role's core expectations (e.g., build engaging UIs, animation, performance, leadership, architecture)",
-        "no_platform_claim": "Never claim experience with a specific platform, domain, or industry (e.g., Smart TV, streaming, healthcare, fintech) unless the candidate's original bullets explicitly mention it",
-        "animation_terminology": "If the job description mentions Canvas, animation, motion, media, visual design, or entertainment, you may use terminology like \"implementing animations using Canvas, Lottie, and motion libraries\" to describe existing Lottie/animation experience — but do not claim the candidate has worked on specific platforms or industries",
         "adapt": "Adapt the summary to highlight areas of expertise that match those expectations, using the bullet points as evidence",
         "broad_areas": "Use broad expertise areas: \"frontend architecture\", \"UI engineering\", \"performance optimization\", \"design systems\", \"team leadership\", \"animation and interaction design\"",
         "no_invent": "Never invent or exaggerate",
