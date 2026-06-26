@@ -158,7 +158,7 @@ async function main() {
       console.log('Rewriting summary with AI...')
       const bulletsContext = adaptedData.experience.map((e) => `[${e.company}] ${e.role}: ${e.bullets.join('; ')}`).join('\n')
       try {
-        adaptedData.summary = await rewriteSummary(adaptedData.summary, jobDescription, lang, bulletsContext)
+        adaptedData.summary = await rewriteSummary(adaptedData.summary, jobDescription, bulletsContext)
       } catch (err: any) {
         console.warn('Warning: summary rewrite failed, using original:', err.message)
       }
@@ -172,6 +172,7 @@ async function main() {
         {
           role: adaptedData.role,
           info: adaptedData.contact?.info,
+          summary: adaptedData.summary,
           practices: adaptedData.practices,
           experience: adaptedData.experience.map((e) => ({
             role: e.role,
@@ -198,6 +199,7 @@ async function main() {
       )
       if (translated.role) adaptedData.role = translated.role
       if (translated.info && adaptedData.contact) adaptedData.contact.info = translated.info
+      if (translated.summary) adaptedData.summary = translated.summary
       adaptedData.practices = translated.practices
       if (translated.experience) {
         translated.experience.forEach((exp, i) => {

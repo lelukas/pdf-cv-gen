@@ -25,6 +25,7 @@ interface TranslationPrompt {
 interface DadosTraduzir {
   role?: string
   info?: string
+  summary?: string
   practices?: string
   experience?: { role: string; bullets: string[] }[]
   education: { course: string; type?: string; institution: string }[]
@@ -83,10 +84,9 @@ function deepMerge(base: any, extra: any): any {
   return result
 }
 
-function buildPrompt(section: PromptSection, lang: string): string {
+function buildPrompt(section: PromptSection): string {
   const lines = [section.preamble, '', ...Object.values(section.rules)]
   if (section.examples) lines.push('', ...section.examples)
-  lines.push('', '- ' + langRules(lang).join('\n- '))
   return lines.join('\n')
 }
 
@@ -153,7 +153,7 @@ function languageName(code: string): string {
 
 export async function rewriteBullets(experiences: Experience[], jobDescription: string, lang: string = 'en'): Promise<Experience[]> {
   const prompts = loadPrompts()
-  const systemPrompt = buildPrompt(prompts.rewriteBullets.system, lang)
+  const systemPrompt = buildPrompt(prompts.rewriteBullets.system)
 
   const userPrompt = `Job Description:
 ${jobDescription}
@@ -180,14 +180,13 @@ Return a JSON array where each object has the same "company", "period" fields, b
 
   return JSON.parse(cleanJson(result))
 }
-export async function rewriteSummary(summary: string, jobDescription: string, lang: string = 'en', bulletsContext?: string): Promise<string> {
+export async function rewriteSummary(summary: string, jobDescription: string, bulletsContext?: string): Promise<string> {
   const prompts = loadPrompts()
   const preamble = prompts.rewriteSummary.system.preamble
   const rules = Object.values(prompts.rewriteSummary.system.rules)
     .map((r) => `- ${r}`)
     .join('\n')
-  const langRulesText = '- ' + langRules(lang).join('\n- ')
-  const systemPrompt = `${preamble}\n\n${rules}\n${langRulesText}`
+  const systemPrompt = `${preamble}\n\n${rules}`
 
   const userPrompt = `Job Description:
 ${jobDescription}
@@ -238,7 +237,10 @@ export async function translateRest(dados: DadosTraduzir, lang: string): Promise
   const rules = Object.values(translation.rules)
     .map((r) => `- ${r}`)
     .join('\n')
-  const systemPrompt = `${preamble}\n\n${rules}`
+  const langSpecific = langRules(lang)
+    .map((r) => `- ${r}`)
+    .join('\n')
+  const systemPrompt = `${preamble}\n\n${rules}\n${langSpecific}`
 
   const userPrompt = `Translate this data to ${targetLang}:
 
