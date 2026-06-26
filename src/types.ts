@@ -19,7 +19,7 @@ export interface Language {
 }
 
 export interface Contact {
-  location?: string
+  info?: string
   links?: string[]
   phone?: string
   email?: string

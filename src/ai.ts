@@ -23,6 +23,8 @@ interface TranslationPrompt {
 }
 
 interface DadosTraduzir {
+  role?: string
+  info?: string
   practices?: string
   education: { course: string; type?: string; institution: string }[]
   languages: { language: string; level?: string }[]

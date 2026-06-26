@@ -12,7 +12,7 @@ const TEMPLATE_DATA: ResumeData = {
   name: 'YOUR_NAME',
   role: 'YOUR_ROLE',
   contact: {
-    location: 'YOUR_LOCATION',
+    info: 'YOUR_LOCATION',
     links: ['https://your-site.com', 'https://linkedin.com/in/your-profile'],
     phone: 'YOUR_PHONE',
     email: 'your@email.com',
@@ -170,6 +170,8 @@ async function main() {
     try {
       const translated = await translateRest(
         {
+          role: adaptedData.role,
+          info: adaptedData.contact?.info,
           practices: adaptedData.practices,
           education: (adaptedData.education || []).map((f) => ({
             course: f.course,
@@ -190,6 +192,8 @@ async function main() {
         },
         lang,
       )
+      if (translated.role) adaptedData.role = translated.role
+      if (translated.info && adaptedData.contact) adaptedData.contact.info = translated.info
       adaptedData.practices = translated.practices
       if (translated.education) {
         translated.education.forEach((f, i) => {

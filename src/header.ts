@@ -10,7 +10,7 @@ export function generateHeader(data: ResumeData): string {
   return `
     <div class="name">${data.name}</div>
     <div class="header-subtitle">${data.role || ''}</div>
-    <div class="header-subtitle">${contact.location || ''}</div>
+    <div class="header-subtitle">${contact.info || ''}</div>
     <div class="header-contacts">${phoneEmail}</div>
     <div class="header-links">${linksStr}</div>
   `
