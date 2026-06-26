@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import puppeteer from 'puppeteer'
 import { ResumeData } from './types.js'
 import { generateHtml } from './template.js'
@@ -149,8 +149,7 @@ async function main() {
     console.log(`Adapting resume for the job (${lang})...`)
     console.log('Rewriting bullets with AI...')
     try {
-      const rewritten = await rewriteBullets(adaptedData.experience, jobDescription, lang)
-      adaptedData.experience = rewritten
+      adaptedData.experience = await rewriteBullets(adaptedData.experience, jobDescription, lang)
     } catch (err: any) {
       console.warn('Warning: bullet rewrite failed, using originals:', err.message)
     }
@@ -167,6 +166,7 @@ async function main() {
   }
 
   if (lang !== 'en') {
+    console.log(`Translating to ${lang}...`)
     try {
       const translated = await translateRest(
         {
