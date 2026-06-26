@@ -173,6 +173,10 @@ async function main() {
           role: adaptedData.role,
           info: adaptedData.contact?.info,
           practices: adaptedData.practices,
+          experience: adaptedData.experience.map((e) => ({
+            role: e.role,
+            bullets: e.bullets,
+          })),
           education: (adaptedData.education || []).map((f) => ({
             course: f.course,
             type: f.type,
@@ -195,6 +199,14 @@ async function main() {
       if (translated.role) adaptedData.role = translated.role
       if (translated.info && adaptedData.contact) adaptedData.contact.info = translated.info
       adaptedData.practices = translated.practices
+      if (translated.experience) {
+        translated.experience.forEach((exp, i) => {
+          if (adaptedData.experience[i]) {
+            adaptedData.experience[i].role = exp.role
+            adaptedData.experience[i].bullets = exp.bullets
+          }
+        })
+      }
       if (translated.education) {
         translated.education.forEach((f, i) => {
           if (adaptedData.education?.[i]) {

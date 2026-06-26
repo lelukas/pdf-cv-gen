@@ -26,6 +26,7 @@ interface DadosTraduzir {
   role?: string
   info?: string
   practices?: string
+  experience?: { role: string; bullets: string[] }[]
   education: { course: string; type?: string; institution: string }[]
   languages: { language: string; level?: string }[]
   _titles: {
