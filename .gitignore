@@ -8,3 +8,4 @@ data.json
 cv-*.txt
 config/prompts.custom.json
 config/translation.custom.json
+.DS_Store
