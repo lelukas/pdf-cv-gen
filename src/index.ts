@@ -109,31 +109,6 @@ async function main() {
   const OUTPUT_PATH = `output/cv-${lang}.pdf`
   mkdirSync('output', { recursive: true })
 
-  if (jobPath) {
-    console.log('Checking JSON files...')
-    if (!validateJsonFiles()) {
-      console.error('\nFix the errors above and try again.')
-      process.exit(1)
-    }
-  }
-
-  if (!jobPath) {
-    console.error('Usage:')
-    console.error('  npm run init              # Create data.json template')
-    console.error('  npm run generate -- path/to/job.txt')
-    console.error('')
-    console.error('Optional flags:')
-    console.error('  --lang pt-BR, -l pt-BR    # Output in Portuguese (Brazil)')
-    console.error('  --extract                 # Extract text alongside PDF as .txt')
-    console.error('  --skip-range YYYY-YYYY    # Omit experiences within year range')
-    console.error('')
-    console.error('Examples:')
-    console.error('  npm run generate -- job.txt --lang pt-BR')
-    console.error('  npm run generate -- job.txt --extract')
-    console.error('  npm run generate -- job.txt --skip-range 2017-2019')
-    process.exit(1)
-  }
-
   let data: ResumeData
   try {
     data = JSON.parse(readFileSync(DATA_PATH, 'utf-8'))
@@ -142,15 +117,12 @@ async function main() {
     process.exit(1)
   }
 
-  let jobDescription: string
-  if (existsSync(jobPath)) {
-    jobDescription = readFileSync(jobPath, 'utf-8')
-  } else {
-    console.error(`File not found: ${jobPath}`)
+  console.log('Checking JSON files...')
+  if (!validateJsonFiles()) {
+    console.error('\nFix the errors above and try again.')
     process.exit(1)
   }
 
-  console.log(`Adapting resume for the job (${lang})...`)
   const adaptedData = { ...data }
 
   if (skipRange) {
@@ -165,21 +137,32 @@ async function main() {
     console.log(`Entries omitted: ${before - adaptedData.experience.length}`)
   }
 
-  console.log('Rewriting bullets with AI...')
-  try {
-    const rewritten = await rewriteBullets(adaptedData.experience, jobDescription, lang)
-    adaptedData.experience = rewritten
-  } catch (err: any) {
-    console.warn('Warning: bullet rewrite failed, using originals:', err.message)
-  }
+  if (jobPath) {
+    let jobDescription: string
+    if (existsSync(jobPath)) {
+      jobDescription = readFileSync(jobPath, 'utf-8')
+    } else {
+      console.error(`File not found: ${jobPath}`)
+      process.exit(1)
+    }
 
-  if (adaptedData.summary) {
-    console.log('Rewriting summary with AI...')
-    const bulletsContext = adaptedData.experience.map((e) => `[${e.company}] ${e.role}: ${e.bullets.join('; ')}`).join('\n')
+    console.log(`Adapting resume for the job (${lang})...`)
+    console.log('Rewriting bullets with AI...')
     try {
-      adaptedData.summary = await rewriteSummary(adaptedData.summary, jobDescription, lang, bulletsContext)
+      const rewritten = await rewriteBullets(adaptedData.experience, jobDescription, lang)
+      adaptedData.experience = rewritten
     } catch (err: any) {
-      console.warn('Warning: summary rewrite failed, using original:', err.message)
+      console.warn('Warning: bullet rewrite failed, using originals:', err.message)
+    }
+
+    if (adaptedData.summary) {
+      console.log('Rewriting summary with AI...')
+      const bulletsContext = adaptedData.experience.map((e) => `[${e.company}] ${e.role}: ${e.bullets.join('; ')}`).join('\n')
+      try {
+        adaptedData.summary = await rewriteSummary(adaptedData.summary, jobDescription, lang, bulletsContext)
+      } catch (err: any) {
+        console.warn('Warning: summary rewrite failed, using original:', err.message)
+      }
     }
   }
 
